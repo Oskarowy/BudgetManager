@@ -73,11 +73,9 @@ try{
    		default:
       		include 'templates/mainTemplate.php';
   }	
-
-
 } catch (Exception $e){
 	//echo 'Błąd: ' . $e->getMessage();
-	exit('Portal chwilowo niedostępny');	
+	exit('Aplikacja chwilowo niedostępna');	
 }
 
 
