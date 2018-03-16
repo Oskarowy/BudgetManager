@@ -108,6 +108,6 @@ class ManagerFront extends Manager
     $reg = new Registration($this->dbo);
       return $reg->registerUser();
   }
-  
+
 }
 ?>
