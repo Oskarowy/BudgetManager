@@ -1,0 +1,157 @@
+body{
+	font-family: 'Nunito', sans-serif;
+	font-weight: 400;
+	background: #cccccc;
+	margin-top: 100px;
+	margin-bottom: 100px;
+	background-image: url('../img/back.jpg');
+	background-repeat: no-repeat;
+	background-position: top center;
+	background-size: 100% auto;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	background-size: cover;
+	-o-background-size: cover;
+	text-align: center;
+}
+
+.container-fluid{
+	padding: 0;
+}
+
+.panel{
+	min-height: 460px;
+}
+
+
+#logo
+{
+	padding: 10px;
+	font-size: 40px;
+	font-weight: 700;
+	background-color: #ae7f47;
+	color: #ffe6c8;
+	text-align:center;
+}
+
+.input-margin{
+	margin-bottom: 25px;
+}
+
+#gotoregistration,
+#gotologin{
+	text-align:center;
+}
+
+hr{
+	margin: 20px;
+}
+
+.main-menu{
+	background-image: url('../img/pluses.png');
+}
+
+.page-footer
+{
+	padding: 10px;
+	font-size: 18px;
+	background-color: #9a6c35;
+	color: #ffe6c8;
+	text-align:center;
+}
+
+
+.navbar-default {
+    background-color: #9a6c35;
+    border-color: #ae7f47;
+	max-height: 70px;
+}
+
+.navbar-default .navbar-brand {
+    color: #ffe6c8;
+	font-size: 26px;
+	font-weight: 700;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #ffe6c8;
+	cursor: default;
+}
+
+.navbar-default .navbar-nav > li > a {
+	color: #ffe6c8;
+	font-size: 16px;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: white;
+	background-color: #ae7f47;
+	border-radius: 5px;
+}
+.navbar-default .navbar-toggle {
+    border-color: #c39762;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #e5c298;
+}
+.dropdown-navbar-item {
+    color: ffe6c8 !important;
+	background-color: #9a6c35 !important;
+}
+
+.menubutton{
+	margin: 5px;
+	border: 1px solid #895b24;
+}
+
+.coffeetron{
+	background: transparent;
+	color: #ffe6c8;
+	text-align: center;
+}
+
+#steps{
+	margin-top: 20px;
+	text-align: left;
+	line-height: 2;
+	font-size: 23px;
+}
+
+.gotoforms{
+	color: #9a6c35;
+	background: transparent;
+	border: none;
+	margin-top: -50px;
+	padding: 20px;
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active{
+	text-decoration: none;
+	color: white;
+}
+
+.form-link:hover{
+	color: white;
+	letter-spacing: 2px;
+	cursor: pointer;
+	text-decoration: none;
+	button: active;
+}
+
+.table-heading{
+	margin: 0;
+	padding: 0;
+	font-size: 18px;
+	text-align: center;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+#chartdiv {
+	width: 100%;
+	height: 500px;
+}
