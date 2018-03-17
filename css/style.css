@@ -4,15 +4,12 @@ body{
 	background: #cccccc;
 	margin-top: 100px;
 	margin-bottom: 100px;
-	background-image: url('../img/back.jpg');
-	background-repeat: no-repeat;
-	background-position: top center;
-	background-size: 100% auto;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	background-size: cover;
 	-o-background-size: cover;
 	text-align: center;
+	background-image: url('../img/pluses.png');
 }
 
 .container-fluid{

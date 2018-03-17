@@ -14,10 +14,11 @@
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" 
           crossorigin="anonymous">
   	<link rel="stylesheet" 
-          href="css/style.css" >
+          href="css/style.css"
+          type="text/css">
   	<link rel="stylesheet" 
           href="css/fontello.css" 
-          type="text/css" />
+          type="text/css">
   	<link rel="stylesheet" 
           href="https://fonts.googleapis.com/css?family=Nunito:400,700&amp;subset=latin-ext" >
  
@@ -26,3 +27,4 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
+<body>
