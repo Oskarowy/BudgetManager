@@ -24,10 +24,10 @@
 					href="index.php?action=showLoginForm"><h2>Masz już konto?</h2>
 				<button class="btn btn-success btn-block btn-lg">Zaloguj się!</button></a>
 			</div>
-		<div class="col-lg-6">
+			<div class="col-lg-6">
 				<a 	class="form-link" 
 					href="index.php?action=showRegistrationForm"><h2>Nowy Użytkownik?</h2>
 				<button class="btn btn-info btn-block btn-lg">Zarejestruj się!</button></a>
-		</div>
+			</div>
 		</div>
 	</div>

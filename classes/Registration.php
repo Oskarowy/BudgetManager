@@ -15,8 +15,8 @@ class Registration
   {
     $this->fields['email'] = new FormInput('email', 'Adres e-mail');
     $this->fields['username'] = new FormInput('username', 'Imię');
-    $this->fields['password'] = new FormInput('password', 'password', '', 'password');
-    $this->fields['passwordConf'] = new FormInput('passwordConf', 'Powtórz password', '', 'password');
+    $this->fields['password'] = new FormInput('password', 'Hasło', '', 'password');
+    $this->fields['passwordConf'] = new FormInput('passwordConf', 'Powtórz Hasło', '', 'password');
   }
   
   function showRegistrationForm()

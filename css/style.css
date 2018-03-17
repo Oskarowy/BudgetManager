@@ -4,12 +4,19 @@ body{
 	background: #cccccc;
 	margin-top: 100px;
 	margin-bottom: 100px;
-	-webkit-background-size: cover;
+	/*-webkit-background-size: cover;
 	-moz-background-size: cover;
 	background-size: cover;
 	-o-background-size: cover;
 	text-align: center;
 	background-image: url('../img/pluses.png');
+	*/
+}
+
+.message{
+	font-size: 20px;
+	font-weight: 700;
+	color: white;
 }
 
 .container-fluid{
