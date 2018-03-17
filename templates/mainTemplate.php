@@ -12,6 +12,9 @@ require_once (__DIR__ . '/../basics/pageNav.php');
 
         <?php
           switch($action):
+          	case 'showBalance':
+          	  include 'templates/balanceTemplate.php';
+          	  break;
           	case 'showMenu':
           	  include 'templates/mainMenu.php';
           	  break;

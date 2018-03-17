@@ -47,6 +47,10 @@ try{
       		$manager->logout();
       		header('Location:index.php?action=showMain');
       		break;
+      case 'checkout':
+          $period = $_GET['period'];
+          header('Location:index.php?action=showBalance');
+          break;
     	case 'registerUser':
       		switch($manager->registerUser()):
         		case ACTION_OK:

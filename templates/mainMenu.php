@@ -14,7 +14,7 @@
 						<i 	class="glyphicon glyphicon-minus"></i> 
 						Dodaj wydatek
 				</button>
-				<button 	onClick="location.href='przeglad-bilansu?role=currentmonth'" 
+				<button 	onClick="location.href='index.php?action=checkout&period=currentmonth'" 
 							class="btn btn-lg btn-block btn-success ">
 						<i 	class="glyphicon glyphicon-stats"></i> 
 						Przeglądaj bilans

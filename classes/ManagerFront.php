@@ -292,7 +292,8 @@ class ManagerFront extends Manager
       }
   }
 
-  function verifyDate($dateToVerify){
+  function getToday()
+  {
     $date = getdate();
     $d = $date['mday'];
     $m = $date['mon'];
@@ -301,9 +302,18 @@ class ManagerFront extends Manager
     if($m<10) $m = '0'.$m;
     $today = $y.'-'.$m.'-'.$d;
 
+    return $today;
+  }
+
+  function verifyDate($dateToVerify){
+
+    $today = $this->getToday();
+    $year = substr($today, 0, 4);
+    $month = substr($today, 5, 2);
+
     $min_date = '2000-01-01';
     $current_month_last_day = date("t", strtotime($today));
-    $max_date = $y.'-'.$m.'-'.$current_month_last_day;
+    $max_date = $year.'-'.$month.'-'.$current_month_last_day;
     
     if($dateToVerify < $min_date){
       return TO_LOW_DATE;
