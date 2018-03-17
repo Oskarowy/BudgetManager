@@ -16,4 +16,8 @@
   define("USER_NOT_FOUND", 108);
   define("USER_NAME_ALREADY_EXISTS", 109);
   define("USER_ID_ALREADY_EXISTS", 110);
+
+  define("AMOUNT_NOT_NUMERIC", 201);
+  define("TO_LOW_DATE", 202);
+  define("TO_HIGH_DATE", 203);
 ?>

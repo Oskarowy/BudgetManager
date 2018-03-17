@@ -193,6 +193,47 @@ class ManagerFront extends Manager
     $expcategory = $_POST["expcategory"];
     $expcomment = $_POST["expcomment"];
 
+    $control_test = true; //if it will be positive at the end, record could be added to DB
+
+    if ((!isset($payment))
+      ||(!isset($expamount))
+      ||(!isset($expdate))
+      ||(!isset($expcategory))){
+      $control_test = false;
+      return FORM_DATA_MISSING;
+    }
+
+    if(!is_numeric($expamount)){
+      $control_test = false;
+      return AMOUNT_NOT_NUMERIC;
+    }
+
+    $date = getdate();
+    $d = $date['mday'];
+    $m = $date['mon'];
+    $y = $date['year'];
+    if($d<10) $d = '0'.$d;
+    if($m<10) $m = '0'.$m;
+    $today = $y.'-'.$m.'-'.$d;
+
+    $min_date = '2000-01-01';
+    $current_month_last_day = date("t", strtotime($today));
+    $max_date = $y.'-'.$m.'-'.$current_month_last_day;
+    
+    //Check if date is correct
+    if($expdate < $min_date){
+      $control_test = false;
+      return TO_LOW_DATE;
+    }
+    if($expdate > $max_date){
+      $control_test = false;
+      return TO_HIGH_DATE;
+    }
+
+    if(strlen($expcomment)==0) $expcomment = '';
+
+    if($control_test==false) return ACTION_FAILED;
+
     $query = "INSERT INTO Expenses VALUES "
            . "(NULL, '$expcategory', '$payment', '$user_id', '$expamount', '$expdate', '$expcomment' )";
 

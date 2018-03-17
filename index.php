@@ -77,6 +77,18 @@ try{
                 $manager->setMessage('Pomyślnie dodano nowy wydatek.');
                 header('Location:index.php?action=showMenu');
                 return;
+            case AMOUNT_NOT_NUMERIC;
+                $manager->setMessage('Kwota może zawierać wyłącznie cyfry!');
+                break;
+            case FORM_DATA_MISSING:
+                $manager->setMessage('Proszę wypełnić wszystkie pola formularza!');
+                break;
+            case TO_LOW_DATE:
+                $manager->setMessage('Data nie może być wcześniejsza, niż 01-01-2000!');
+                break;
+            case TO_HIGH_DATE:
+                $manager->setMessage('Data nie może być późniejsza, niż ostatni dzień bieżącego miesiąca!');
+                break;
             case ACTION_FAILED:
                 $manager->setMessage('Obecnie dodanie wydatku nie jest możliwe.');
                break;
@@ -84,7 +96,7 @@ try{
             default:
               $manager->setMessage('Błąd serwera!');
           endswitch;
-          header('Location:index.php?action=showMenu');
+          header('Location:index.php?action=addRecord');
         break;
    		default:
       		include 'templates/mainTemplate.php';

@@ -1,4 +1,14 @@
-<?php if(!isset($manager)) die(); ?>
+<?php if(!isset($manager)) die(); 
+
+    $date = getdate();
+    $d = $date['mday'];
+    $m = $date['mon'];
+    $y = $date['year'];
+    if($d<10) $d = '0'.$d;
+    if($m<10) $m = '0'.$m;
+    $today = $y.'-'.$m.'-'.$d;
+
+?>
 
 <div id="addexp" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
     <div class="panel panel-primary">
@@ -34,7 +44,7 @@
                                 <input 	type="date" 
                                 		class="form-control" 
                                 		name="expdate" 
-                                		value="">
+                                		value="<?php echo($today); ?>">
                             </div>
                         </div>
 						
