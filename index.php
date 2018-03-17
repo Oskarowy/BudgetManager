@@ -27,7 +27,8 @@ try{
 			switch($manager->login()){
 				case ACTION_OK : 
 					$manager->setMessage('Zalogowanie prawidłowe');
-					header('Location:index.php?action=showMain');
+					$manager->setDefaultCategories();
+					header('Location:index.php?action=showMenu');
 					return;
 				case NO_LOGIN_REQUIRED : 
 					$manager->setMessage('Najpierw proszę się wylogować.');

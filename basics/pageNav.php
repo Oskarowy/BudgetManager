@@ -23,7 +23,11 @@
 							class="nav navbar-nav navbar-right">
 							<?php if($manager->logged): ?>
 	         					<li>
-	         						<div><h4>Zalogowany: <strong><?=$manager->logged->username?></strong></h4></div>
+	         						<div>
+	         							<h4 style="color: white;" >
+	         								Zalogowany: <strong><?=$manager->logged->username?></strong>
+	         							</h4>
+	         						</div>
 	          					</li>
 	          					<li>
 	          						<button onClick="location.href='index.php?action=logout'" 

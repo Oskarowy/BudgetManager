@@ -12,6 +12,8 @@ require_once (__DIR__ . '/../basics/pageNav.php');
 
         <?php
           switch($action):
+          	case 'showMenu':
+          	  include 'templates/mainMenu.php';
             case 'showLoginForm' :
               include 'templates/loginForm.php';
               break;

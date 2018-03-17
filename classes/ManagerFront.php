@@ -84,6 +84,7 @@ class ManagerFront extends Manager
         $loggedUsername = $row[1];
         $loggedUserId = $row[0];
         $_SESSION['logged'] = new User($loggedUserId, $loggedUsername);
+        $_SESSION['user_id'] = $loggedUserId;
         return ACTION_OK;
       }
     }
@@ -107,6 +108,79 @@ class ManagerFront extends Manager
   {
     $reg = new Registration($this->dbo);
       return $reg->registerUser();
+  }
+
+  function setDefaultCategories()
+  {
+    $this->setDefaultExpensesCategories();
+    $this->setDefaultIncomesCategories();
+    $this->setDefaultPaymentCategories();
+  }
+
+  function setDefaultExpensesCategories()
+  {
+    $user_id =  $_SESSION['user_id'];
+
+    $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows == 0){  
+      
+      $query = "INSERT INTO expenses_category SELECT def.id, '$user_id', def.order, def.name FROM default_expenses_category AS def";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      } 
+    } else return ACTION_OK;
+  }
+
+  function setDefaultIncomesCategories()
+  {
+    $user_id =  $_SESSION['user_id'];
+
+    $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows == 0){  
+      
+      $query = "INSERT INTO incomes_category SELECT def.id, '$user_id', def.order, def.name FROM default_incomes_category AS def";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      } 
+    } else return ACTION_OK;
+  }
+
+  function setDefaultPaymentCategories()
+  {
+    $user_id =  $_SESSION['user_id'];
+
+    $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows == 0){  
+      
+      $query = "INSERT INTO payment_methods SELECT def.id, '$user_id', def.order, def.name FROM default_payment_methods AS def";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      } 
+    } else return ACTION_OK;
   }
 
 }
