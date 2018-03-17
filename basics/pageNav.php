@@ -22,31 +22,31 @@
 						<ul style="margin-top: 10px;" 
 							class="nav navbar-nav navbar-right">
 							<?php if($manager->logged): ?>
-         					<li>
-         						<div><h4>Zalogowany: <strong><?=$manager->logged->username?></strong></h4></div>
-          					</li>
-          					<li>
-          						<button onClick="location.href='index.php?action=logout'" 
-										type="button" 
-										class="btn btn-info navbar-btn btn-sm menubutton">
-										Wyloguj się
-								</button>
-							</li>
+	         					<li>
+	         						<div><h4>Zalogowany: <strong><?=$manager->logged->username?></strong></h4></div>
+	          					</li>
+	          					<li>
+	          						<button onClick="location.href='index.php?action=logout'" 
+											type="button" 
+											class="btn btn-info navbar-btn btn-sm menubutton">
+											Wyloguj się
+									</button>
+								</li>
         					<?php else: ?>
-							<li>
-								<button onClick="location.href='index.php?action=showLoginForm'" 
-										type="button" 
-										class="btn btn-success navbar-btn btn-sm hidden-xs menubutton">
-									Zaloguj się
-								</button>
-							</li>
-							<li>
-								<button onClick="location.href='index.php?action=showRegistrationForm'" 
-										type="button" 
-										class="btn btn-info navbar-btn btn-sm hidden-xs menubutton">
-									Zarejestruj się
-								</button>
-							</li>
+								<li>
+									<button onClick="location.href='index.php?action=showLoginForm'" 
+											type="button" 
+											class="btn btn-success navbar-btn btn-sm menubutton">
+										Zaloguj się
+									</button>
+								</li>
+								<li>
+									<button onClick="location.href='index.php?action=showRegistrationForm'" 
+											type="button" 
+											class="btn btn-info navbar-btn btn-sm hidden-xs menubutton">
+										Zarejestruj się
+									</button>
+								</li>
 							<?php endif ?>
 						</ul>
 					</div>

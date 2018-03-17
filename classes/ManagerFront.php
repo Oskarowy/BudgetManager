@@ -62,8 +62,8 @@ class ManagerFront extends Manager
     $username = $this->dbo->real_escape_string($username);
     $pass = $this->dbo->real_escape_string($pass);
     
-    $query = "SELECT `user_id`, `uname`, `upass`, `email` "
-           . "FROM Users WHERE `uname`='$username'";
+    $query = "SELECT `user_id`, `username`, `password`, `email` "
+           . "FROM Users WHERE `username`='$username' OR `email`='$username'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';

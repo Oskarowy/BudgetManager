@@ -13,7 +13,7 @@ try{
 
 	$message = $manager->getMessage();
 	if(!$message && $action == 'showLoginForm'){
-		$message = 'Wprowadź e-mail i hasło użytkownika';
+		$message = 'Wprowadź nazwę lub e-mail i hasło użytkownika';
 	}
 
 	if(($action == 'showLoginForm' || $action == 'showRegistrationForm' || $action == 'registerUser') && $manager->logged){

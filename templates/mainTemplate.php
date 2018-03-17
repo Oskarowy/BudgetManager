@@ -7,7 +7,7 @@ require_once (__DIR__ . '/../basics/pageNav.php');
 	<div id="mainContent">
 
 		<?php if($message): ?>
-        <div class="message"><?=$message;?></div>
+        <div class="message" style="color:white; font-size: 20px;"><?=$message;?></div>
         <?php endif; ?>	
 
         <?php
