@@ -1,3 +1,6 @@
+<?php if($manager->logged){
+	header("Location:index.php?action=showMenu");
+} ?>
 <article>
 	<div class="jumbotron coffeetron">
 		<h1 style="letter-spacing: 5px;">

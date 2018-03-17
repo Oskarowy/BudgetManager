@@ -96,7 +96,34 @@ try{
             default:
               $manager->setMessage('Błąd serwera!');
           endswitch;
-          header('Location:index.php?action=addRecord');
+          header('Location:index.php?action=addRecord&type=expense');
+        break;
+      case 'addInc':
+        switch($manager->addIncome()):
+            case ACTION_OK:
+                $manager->setMessage('Pomyślnie dodano nowy przychód.');
+                header('Location:index.php?action=showMenu');
+                return;
+            case AMOUNT_NOT_NUMERIC;
+                $manager->setMessage('Kwota może zawierać wyłącznie cyfry!');
+                break;
+            case FORM_DATA_MISSING:
+                $manager->setMessage('Proszę wypełnić wszystkie pola formularza!');
+                break;
+            case TO_LOW_DATE:
+                $manager->setMessage('Data nie może być wcześniejsza, niż 01-01-2000!');
+                break;
+            case TO_HIGH_DATE:
+                $manager->setMessage('Data nie może być późniejsza, niż ostatni dzień bieżącego miesiąca!');
+                break;
+            case ACTION_FAILED:
+                $manager->setMessage('Obecnie dodanie przychodu nie jest możliwe.');
+               break;
+            case SERVER_ERROR:
+            default:
+              $manager->setMessage('Błąd serwera!');
+          endswitch;
+          header('Location:index.php?action=addRecord&type=income');
         break;
    		default:
       		include 'templates/mainTemplate.php';

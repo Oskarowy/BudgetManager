@@ -208,26 +208,15 @@ class ManagerFront extends Manager
       return AMOUNT_NOT_NUMERIC;
     }
 
-    $date = getdate();
-    $d = $date['mday'];
-    $m = $date['mon'];
-    $y = $date['year'];
-    if($d<10) $d = '0'.$d;
-    if($m<10) $m = '0'.$m;
-    $today = $y.'-'.$m.'-'.$d;
-
-    $min_date = '2000-01-01';
-    $current_month_last_day = date("t", strtotime($today));
-    $max_date = $y.'-'.$m.'-'.$current_month_last_day;
-    
-    //Check if date is correct
-    if($expdate < $min_date){
-      $control_test = false;
-      return TO_LOW_DATE;
-    }
-    if($expdate > $max_date){
-      $control_test = false;
-      return TO_HIGH_DATE;
+    switch($this->verifyDate($expdate)){
+      case TO_LOW_DATE:
+        $control_test = false;
+        return TO_LOW_DATE;
+        break;
+      case TO_HIGH_DATE:
+        $control_test = false;
+        return TO_HIGH_DATE;
+        break;
     }
 
     if(strlen($expcomment)==0) $expcomment = '';
@@ -248,6 +237,82 @@ class ManagerFront extends Manager
         unset($_POST["expcomment"]);
         return ACTION_OK;
       }
+  }
+
+  function addIncome()
+  {
+    $user_id =  $_SESSION['user_id'];
+
+    $incamount = $_POST["incamount"];
+    $incdate = $_POST["incdate"];
+    $inccategory = $_POST["inccategory"];
+    $inccomment = $_POST["inccomment"];
+
+    $control_test = true; //if it will be positive at the end, record could be added to DB
+
+    if ((!isset($incamount))
+      ||(!isset($incdate))
+      ||(!isset($inccategory))){
+      $control_test = false;
+      return FORM_DATA_MISSING;
+    }
+
+    if(!is_numeric($incamount)){
+      $control_test = false;
+      return AMOUNT_NOT_NUMERIC;
+    }
+
+    switch($this->verifyDate($incdate)){
+      case TO_LOW_DATE:
+        $control_test = false;
+        return TO_LOW_DATE;
+        break;
+      case TO_HIGH_DATE:
+        $control_test = false;
+        return TO_HIGH_DATE;
+        break;
+    }
+
+    if(strlen($inccomment)==0) $inccomment = '';
+
+    if($control_test==false) return ACTION_FAILED;
+
+    $query = "INSERT INTO Incomes VALUES "
+           . "(NULL, '$inccategory', '$user_id', '$incamount', '$incdate', '$inccomment')";
+
+    if(!$this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      } else {
+        unset($_POST["inccategory"]);
+        unset($_POST["incamount"]);
+        unset($_POST["incdate"]);
+        unset($_POST["inccategory"]);
+        return ACTION_OK;
+      }
+  }
+
+  function verifyDate($dateToVerify){
+    $date = getdate();
+    $d = $date['mday'];
+    $m = $date['mon'];
+    $y = $date['year'];
+    if($d<10) $d = '0'.$d;
+    if($m<10) $m = '0'.$m;
+    $today = $y.'-'.$m.'-'.$d;
+
+    $min_date = '2000-01-01';
+    $current_month_last_day = date("t", strtotime($today));
+    $max_date = $y.'-'.$m.'-'.$current_month_last_day;
+    
+    if($dateToVerify < $min_date){
+      return TO_LOW_DATE;
+    }
+    if($dateToVerify > $max_date){
+      return TO_HIGH_DATE;
+    }
+
+    return ACTION_OK;
   }
 
 }
