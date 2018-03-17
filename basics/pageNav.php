@@ -7,7 +7,7 @@
 						<div class="navbar-header">
 							<a 	class="navbar-brand navbar-text" 
 								style="margin-top: 0px;" 
-								href="planowanie-budzetu" >
+								href="index.php?action=showMain" >
 									<span 	class="visible-xs visible-sm" 
 											style="font-size: 20px; margin-left: -10px;">
 										Budget</br>manager
@@ -18,29 +18,18 @@
 							</a>
 						</div>
 					</div>
-					<div class="col-xs-5 col-xs-offset-4">
-						<button type="button" 
-								class="navbar-toggle" 
-								data-toggle="collapse" 
-								data-target="#navbar-collapse-1">
-							<span class="sr-only">Toggle navigation</span> 
-								Rozwiń menu 
-								<i class="glyphicon glyphicon-menu-hamburger"></i>
-						</button>
-					</div>
-					<div class="collapse navbar-collapse" id="navbar-collapse-1">
+					<div class="container">
 						<ul style="margin-top: 10px;" 
 							class="nav navbar-nav navbar-right">
-							
 							<li>
-								<button onClick="location.href='zaloguj-sie'" 
+								<button onClick="location.href='index.php?action=showLoginForm'" 
 										type="button" 
 										class="btn btn-success navbar-btn btn-sm hidden-xs menubutton">
 									Zaloguj się
 								</button>
 							</li>
 							<li>
-								<button onClick="location.href='zarejestruj-sie'" 
+								<button onClick="location.href='index.php?action=showRegistrationForm'" 
 										type="button" 
 										class="btn btn-info navbar-btn btn-sm hidden-xs menubutton">
 									Zarejestruj się
@@ -52,4 +41,3 @@
 			</div>
 		</div>
 	</nav>
-	

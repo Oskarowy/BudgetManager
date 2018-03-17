@@ -1,7 +1,7 @@
-<nav class="navbar navbar-fixed-bottom">
+<nav class="navbar navbar-fixed-bottom hidden-xs">
 	<div class="container-fluid">
 		<div class="page-footer">
-			Wykonanie: 2018 &copy; Oskar Białek - wszelkie prawa zastrzeżone. <br /><p class="hidden-xs" style="margin-bottom: 0;">Kontakt: oskar.bialek.programista@gmail.com</p>
+			Wykonanie: 2018 &copy; Oskar Białek - wszelkie prawa zastrzeżone. <br /><p style="margin-bottom: 0;">Kontakt: oskar.bialek.programista@gmail.com</p>
 		</div>
 	</div>
 </nav>
