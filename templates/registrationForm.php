@@ -7,10 +7,10 @@
         </div>  
                 
 		<div class="panel-body" style="padding-top: 25px" >
-            <form 	id="signupform" 
-            		class="form-horizontal" 
+            <form 	id ="signupform" 
+            		class ="form-horizontal" 
             		action = "index.php?action=registerUser" 
-            		method="post">
+            		method ="post">
             <?php foreach($formData as $input): ?>		
                 <div class="form-group">
                     <label class="col-md-3 control-label">

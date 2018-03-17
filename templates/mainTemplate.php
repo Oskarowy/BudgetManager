@@ -14,12 +14,16 @@ require_once (__DIR__ . '/../basics/pageNav.php');
           switch($action):
           	case 'showMenu':
           	  include 'templates/mainMenu.php';
+          	  break;
             case 'showLoginForm' :
               include 'templates/loginForm.php';
               break;
             case 'showRegistrationForm' :
               $manager->showRegistrationForm();
               break;
+            case 'addRecord':
+            	include 'templates/addRecord.php';
+            	break;
             case 'showMain':
             default:
               include 'templates/innerContentDiv.php';

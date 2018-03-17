@@ -71,6 +71,21 @@ try{
       		endswitch;
       		header('Location:index.php?action=showRegistrationForm');
      		break;
+      case 'addExp':
+        switch($manager->addExpense()):
+            case ACTION_OK:
+                $manager->setMessage('Pomyślnie dodano nowy wydatek.');
+                header('Location:index.php?action=showMenu');
+                return;
+            case ACTION_FAILED:
+                $manager->setMessage('Obecnie dodanie wydatku nie jest możliwe.');
+               break;
+            case SERVER_ERROR:
+            default:
+              $manager->setMessage('Błąd serwera!');
+          endswitch;
+          header('Location:index.php?action=showMenu');
+        break;
    		default:
       		include 'templates/mainTemplate.php';
   }	

@@ -183,5 +183,31 @@ class ManagerFront extends Manager
     } else return ACTION_OK;
   }
 
+  function addExpense()
+  {
+    $user_id =  $_SESSION['user_id'];
+
+    $expamount = $_POST["expamount"];
+    $expdate = $_POST["expdate"];
+    $payment = $_POST["payment"];
+    $expcategory = $_POST["expcategory"];
+    $expcomment = $_POST["expcomment"];
+
+    $query = "INSERT INTO Expenses VALUES "
+           . "(NULL, '$expcategory', '$payment', '$user_id', '$expamount', '$expdate', '$expcomment' )";
+
+    if(!$this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      } else {
+        unset($_POST["expamount"]);
+        unset($_POST["expdate"]);
+        unset($_POST["payment"]);
+        unset($_POST["expcategory"]);
+        unset($_POST["expcomment"]);
+        return ACTION_OK;
+      }
+  }
+
 }
 ?>
