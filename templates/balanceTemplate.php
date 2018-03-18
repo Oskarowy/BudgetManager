@@ -477,6 +477,46 @@ if(isset($_GET['period'])){
 			}
 			if(isset($_SESSION['balance'])) unset($_SESSION['balance']);
 		?>
-		</div>
 	</div>
+</div>
+
+	<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+	<script src="https://www.amcharts.com/lib/3/pie.js"></script>
+	<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+	<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+	<script src="https://www.amcharts.com/lib/3/themes/none.js"></script>
+
+<script>
+	var chart = AmCharts.makeChart( "chartdiv", {
+		"type": "pie",
+		"theme": "none",
+		"dataProvider": 
+		[ 
+			<?php 
+				$array = $_SESSION['chart_data'];
+				$j = 0;
+				for($i = 0; $i<$_SESSION['chart_size']; $i++){		
+					echo "{ \"Kategoria\": \"".$array[$j]."\",";
+					$j++;
+					echo "\"Kwota\": ".$array[$j]." }";
+					$j++;
+					if($j<>(($_SESSION['chart_size'])*2)) echo ", ";
+				} 
+			?>
+		],
+		"valueField": "Kwota",
+		"titleField": "Kategoria",
+		"balloon":{
+			"fixedPosition":true
+		},
+		"export": {
+			"enabled": true
+		}
+	});
+</script>
+
+<?php 
+	if(isset($_SESSION['chart_size'])) unset($_SESSION['chart_size']);
+	if(isset($_SESSION['chart_data'])) unset($_SESSION['chart_data']);
+?>
 
