@@ -1,4 +1,35 @@
-<?php if(!isset($manager)) die(); ?>
+<?php if(!isset($manager)) die();
+
+$today = $manager->getToday(); 
+$y = substr($today, 0, 4);
+$m = substr($today, 5, 2);
+
+if(isset($_GET['period'])){
+	if($_GET['period']=='previousmonth') {
+		if($m==1) { $m = 12; $y--; } else $m--;
+			$today_last_month = $y.'-'.$m.'-'.$d; 
+			$previous_month_last_day = date("t", strtotime($today_last_month));
+			$min_date = $y.'-'.$m.'-01';
+			$max_date = $y.'-'.$m.'-'.$previous_month_last_day;
+		} else if($_GET['period']=='currentmonth'){
+			$current_month_last_day = date("t", strtotime($today));
+			$min_date = $y.'-'.$m.'-01';
+			$max_date = $y.'-'.$m.'-'.$current_month_last_day;
+		} else if($_GET['period']=='currentyear') {
+			$min_date = $y.'-01-01';
+			$max_date = $y.'-12-31'; 
+		} else if($_GET['period']=='customperiod') {
+			$min_date = $custom_date_min;
+			$max_date = $custom_date_max; 
+		}
+	} else { // to be sure, set again current month as default while role is not set
+		$current_month_last_day = date("t", strtotime($today));
+		$min_date = $y.'-'.$m.'-01';
+		$max_date = $y.'-'.$m.'-'.$current_month_last_day;
+	}
+			
+	$_SESSION['balance'] = 0;
+?>
 <div class="container">
 	<div class="row">
 		<div class="col-sm-12 col-xs-12">
@@ -97,37 +128,38 @@
 						<?php 
 							try{
 
-								if(!$this->dbo) 
+								if(!$manager->dbo) {
 									return SERVER_ERROR;
+								}
 								else {
-									$this->dbo->query("SET CHARSET utf8");
-									$this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+									$manager->dbo->query("SET CHARSET utf8");
+									$manager->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
 										
 									$user_id = $_SESSION['user_id'];
 
 									$query = "SELECT * FROM Incomes i INNER JOIN incomes_category cat ON i.user_id = cat.user_id 
 											  AND i.category_id = cat.id WHERE i.user_id = '$user_id' ORDER BY amount DESC";
 
-									if(!$result = $this->dbo->query($query)){
-								    //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-								    return SERVER_ERROR;
-									}
+										if(!$result = $manager->dbo->query($query)){
+									    //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+									    return SERVER_ERROR;
+										}
 
 									if($result->num_rows > 0){
 										$income_number = 1;
 										$incomes_in_period = 0;
 											
 										while ($row = $result->fetch_row()){
-											$current_inc_date = $row['date'];
+											$current_inc_date = $row[4];
 																								
 											if(($current_inc_date>=$min_date)&&($current_inc_date<=$max_date)){	
 																							
 												echo '<tr class="success">';
 												echo "<td>".$income_number."</td>";
-												echo "<td>".$row['date']."</td>";
-												echo "<td>".$row['amount']." PLN"."</td>";
-												echo "<td>".ucfirst($row['name'])."</td>";
-												echo "<td>".ucfirst($row['comment'])."</td>";
+												echo "<td>".$row[4]."</td>";
+												echo "<td>".$row[3]." PLN"."</td>";
+												echo "<td>".ucfirst($row[1])."</td>";
+												echo "<td>".ucfirst($row[5])."</td>";
 												echo "</tr>";
 												$income_number++;
 												$incomes_in_period++;
@@ -138,12 +170,13 @@
 											echo '<td colspan="5">W wybranym okresie Użytkownik nie ma żadnych przychodów!</td>';
 											echo "</tr>";
 										}
-									} else {
+									} 
+									else {
 										echo '<tr class="success">';
 										echo '<td colspan="5">W wybranym okresie Użytkownik nie ma żadnych przychodów!</td>';
 										echo "</tr>";
 									}	
-							}
+								}
 							} catch (Exception $e){
 								//echo 'Błąd: ' . $e->getMessage();
 								exit('Aplikacja chwilowo niedostępna');	
