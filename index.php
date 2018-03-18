@@ -57,6 +57,7 @@ try{
       case 'deleteUser':
           $manager->deleteUser();
           $manager->logout();
+          $manager->setMessage('Konto zalogowanego Użytkownika zostało usunięte.');
           header('Location:index.php?action=showMain');
           break;
     	case 'registerUser':
@@ -138,8 +139,10 @@ try{
           header('Location:index.php?action=addRecord&type=income');
         break;
       case 'editCategory':
-      $type = $_GET['type'];
-        switch($manager->editCategoryName($type)):
+      $category_type = $_GET['type'];
+      $_SESSION['category_id'] = $_GET['category_id'];
+      $_SESSION['newCategoryName'] = $_GET['newCategoryName'];
+        switch($manager->editCategoryName($category_type)):
           case ACTION_OK:
             $manager->setMessage('Pomyślnie zmieniono nazwę kategorii.');
             header('Location:index.php?action=showMenu');
@@ -149,6 +152,23 @@ try{
             break;
           case ACTION_FAILED:
             $manager->setMessage('Obecnie edycja kategorii nie jest możliwa.');
+            break;
+          case SERVER_ERROR:
+          default:
+            $manager->setMessage('Błąd serwera!');
+        endswitch;
+        header('Location:index.php?action=showMain');
+        break;
+      case 'deleteCategory':
+      $category_type = $_GET['type'];
+      $_SESSION['category_id'] = $_GET['category_id'];
+        switch($manager->deleteCategory($category_type)):
+          case ACTION_OK:
+            $manager->setMessage('Wybrana kategoria została usunięta.');
+            header('Location:index.php?action=showMenu');
+            return;
+          case ACTION_FAILED:
+            $manager->setMessage('Obecnie usunięcie kategorii nie jest możliwe.');
             break;
           case SERVER_ERROR:
           default:

@@ -245,11 +245,11 @@ class ManagerFront extends Manager
 
     $user_id = $_SESSION['user_id'];
 
-    if(isset($_POST['category_id'])){
-      $category_id = $_POST['category_id'];
+    if(isset($_SESSION['category_id'])){
+      $category_id = $_SESSION['category_id'];
     } else $category_id = 0;
-    if(isset($_POST['newCategoryName'])){
-      $newName = $_POST['newCategoryName'];
+    if(isset($_SESSION['newCategoryName'])){
+      $newName = $_SESSION['newCategoryName'];
     } else $newName = '';
 
     if($category_id > 0 && $newName != ''){
@@ -617,6 +617,198 @@ class ManagerFront extends Manager
       //echo 'Błąd: ' . $e->getMessage();
       exit('Aplikacja chwilowo niedostępna'); 
     }                             
+  }
+
+  function showIncomesCategoriesAsList($action_type){
+    $user_id =  $_SESSION['user_id'];
+
+    try{
+      if(!$this->dbo) {
+        return SERVER_ERROR;
+      }  
+      else {
+        $this->dbo->query("SET CHARSET utf8");
+        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+
+        $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id' ORDER BY `order` ASC";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+        if($result->num_rows > 0){
+          while ($row = $result->fetch_row()){
+            echo '<li>';
+            echo '<a href="index.php?action=' . $action_type . '&type=incomes&category_id=' . $row[0] . '">';
+            echo $row[3];
+            echo '</a></li>';
+          }
+        } 
+        else {
+          //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
+          return SERVER_ERROR;
+        }   
+      }
+    } catch (Exception $e){
+      //echo 'Błąd: ' . $e->getMessage();
+      exit('Aplikacja chwilowo niedostępna'); 
+      }                            
+  }
+
+  function showExpensesCategoriesAsList($action_type){
+    $user_id =  $_SESSION['user_id'];
+
+    try{
+      if(!$this->dbo) {
+        return SERVER_ERROR;
+      }
+      else {
+        $this->dbo->query("SET CHARSET utf8");
+        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+        
+        $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id' ORDER BY `order` ASC";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+        if($result->num_rows > 0){
+          while ($row = $result->fetch_row()){
+            echo '<li>';
+            echo '<a href="index.php?action=' . $action_type . '&type=expenses&category_id=' . $row[0] . '">';
+            echo $row[3];
+            echo '</a></li>';
+          }
+        } 
+        else {
+          //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
+          return SERVER_ERROR;
+        }   
+      }
+    } catch (Exception $e){
+      //echo 'Błąd: ' . $e->getMessage();
+      exit('Aplikacja chwilowo niedostępna'); 
+    }
+  }
+
+  function showPaymentsAsList($action_type){
+    $user_id =  $_SESSION['user_id'];
+
+    try{
+      if(!$this->dbo) {
+        return SERVER_ERROR;
+      }
+      else {
+        $this->dbo->query("SET CHARSET utf8");
+        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+
+        $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'  ORDER BY `order` ASC";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+        if($result->num_rows > 0){
+          while ($row = $result->fetch_row()){
+            echo '<li>';
+            echo '<a href="index.php?action=' . $action_type . '&type=payment&category_id=' . $row[0] . '">';
+            echo $row[3];
+            echo '</a></li>';
+          }
+        } 
+        else {
+          //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
+          return SERVER_ERROR;
+        }   
+      }
+    } catch (Exception $e){
+      //echo 'Błąd: ' . $e->getMessage();
+      exit('Aplikacja chwilowo niedostępna'); 
+    }                             
+  }
+
+  function deleteCategory($category_type)
+  {
+    $user_id =  $_SESSION['user_id'];
+    $category_id = $_SESSION['category_id'];
+
+      switch ($category_type) {
+        case 'expenses':
+          if($this->deleteExpensesCategory($user_id, $category_id))
+            return ACTION_OK;
+          break;
+        case 'incomes':
+          if($this->deleteIncomesCategory($user_id, $category_id))
+            return ACTION_OK;
+          break;
+        case 'payment':
+          if($this->deletePaymentMethod($user_id, $category_id))
+            return ACTION_OK;
+          break;
+      }
+  }
+
+  function deleteExpensesCategory($user_id, $category_id)
+  {
+     $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows >= 1){
+      
+      $query = "DELETE FROM expenses_category WHERE user_id = '$user_id' AND id = '$category_id'";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      }
+      return ACTION_OK; 
+    } else return ACTION_FAILED;
+  }
+
+  function deleteIncomesCategory($user_id, $category_id)
+  {
+     $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows >= 1){
+      
+      $query = "DELETE FROM incomes_category WHERE user_id = '$user_id' AND id = '$category_id'";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      }
+      return ACTION_OK; 
+    } else return ACTION_FAILED;
+  }
+
+  function deletePaymentMethod($user_id, $category_id)
+  {
+     $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows >= 1){
+      
+      $query = "DELETE FROM payment_methods WHERE user_id = '$user_id' AND id = '$category_id'";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      }
+      return ACTION_OK; 
+    } else return ACTION_FAILED;
   }
 
 }

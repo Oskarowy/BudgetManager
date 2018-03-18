@@ -4,21 +4,46 @@
 			<h1>Dostępne opcje edycji</h1>
 			<hr>
 			<label style="font-size: 15px;">Edycja nazwy kategorii</label>
+			<?php $action_type = 'editCategory'; ?>
 				<div class="btn-group btn-group-justified" role="group" aria-label="...">
 					<div class="btn-group btn-group-lg" role="group">
-						<button type="button" 
-								class="btn btn-primary" 
-								onClick="location.href='index.php?action=editCategory&type=incomes'">Przychody</button>
+					    <button type="button" 
+					    		class="btn btn-primary dropdown-toggle" 
+					    		data-toggle="dropdown" 
+					    		aria-haspopup="true" 
+					    		aria-expanded="true">
+					      	Przychody
+					    		<span class="caret"></span>
+					    </button>
+					    <ul class="dropdown-menu">
+					    	<?=$manager->showExpensesCategoriesAsList($action_type);?>
+					    </ul>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
-						<button type="button" 
-								class="btn btn-primary"
-								onClick="location.href='index.php?action=editCategory&type=expenses'">Wydatki</button>
+					    <button type="button" 
+					    		class="btn btn-primary dropdown-toggle" 
+					    		data-toggle="dropdown" 
+					    		aria-haspopup="true" 
+					    		aria-expanded="true">
+					      	Wydatki
+					    		<span class="caret"></span>
+					    </button>
+					    <ul class="dropdown-menu">
+					    	<?=$manager->showIncomesCategoriesAsList($action_type);?>
+					    </ul>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
-						<button type="button" 
-								class="btn btn-primary" 
-								onClick="location.href='index.php?action=editCategory&type=payment'">Sposoby płatności</button>
+					    <button type="button" 
+					    		class="btn btn-primary dropdown-toggle" 
+					    		data-toggle="dropdown" 
+					    		aria-haspopup="true" 
+					    		aria-expanded="true">
+					      	Sposoby płatności
+					    		<span class="caret"></span>
+					    </button>
+					    <ul class="dropdown-menu">
+					    	<?=$manager->showPaymentsAsList($action_type);?>
+					    </ul>
 					</div>
 				</div>
 			<hr>
@@ -36,15 +61,46 @@
 				</div>
 			<hr>
 			<label style="font-size: 15px;">Usuwanie kategorii</label>
+			<?php $action_type = 'deleteCategory'; ?>
 				<div class="btn-group btn-group-justified" role="group" aria-label="...">
 					<div class="btn-group btn-group-lg" role="group">
-						<button type="button" class="btn btn-danger">Przychody</button>
+					    <button type="button" 
+					    		class="btn btn-danger dropdown-toggle" 
+					    		data-toggle="dropdown" 
+					    		aria-haspopup="true" 
+					    		aria-expanded="true">
+					      	Przychody
+					    		<span class="caret"></span>
+					    </button>
+					    <ul class="dropdown-menu">
+					    	<?=$manager->showExpensesCategoriesAsList($action_type);?>
+					    </ul>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
-						<button type="button" class="btn btn-danger">Wydatki</button>
+					    <button type="button" 
+					    		class="btn btn-danger dropdown-toggle" 
+					    		data-toggle="dropdown" 
+					    		aria-haspopup="true" 
+					    		aria-expanded="true">
+					      	Wydatki
+					    		<span class="caret"></span>
+					    </button>
+					    <ul class="dropdown-menu">
+					    	<?=$manager->showIncomesCategoriesAsList($action_type);?>
+					    </ul>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
-						<button type="button" class="btn btn-danger">Sposoby płatności</button>
+					    <button type="button" 
+					    		class="btn btn-danger dropdown-toggle" 
+					    		data-toggle="dropdown" 
+					    		aria-haspopup="true" 
+					    		aria-expanded="true">
+					      	Sposoby płatności
+					    		<span class="caret"></span>
+					    </button>
+					    <ul class="dropdown-menu">
+					    	<?=$manager->showPaymentsAsList($action_type);?>
+					    </ul>
 					</div>
 				</div>
 			<div class="btn-vertical ">
@@ -55,7 +111,7 @@
 						<i 	class="glyphicon glyphicon-wrench"></i> 
 						Edycja danych Użytkownika
 				</button>
-				<button 	onClick='var result = confirm("Want to delete?");
+				<button 	onClick='var result = confirm("Czy na pewno chcesz usunąć swoje konto?");
 									if (result) {
 									    window.location = "index.php?action=deleteUser";
 									}' 
