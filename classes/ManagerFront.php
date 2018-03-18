@@ -110,6 +110,108 @@ class ManagerFront extends Manager
       return $reg->registerUser();
   }
 
+  function deleteUser()
+  {
+    $user_id =  $_SESSION['user_id'];
+
+    $query = "SELECT * FROM users WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows == 1){
+
+      $this->deleteDataFromAllTablesOfCurrentUser($user_id);
+      
+      $query = "DELETE FROM Users WHERE user_id = '$user_id'";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      }
+      return ACTION_OK; 
+    } else return ACTION_FAILED;
+  }
+
+  function deleteDataFromAllTablesOfCurrentUser($user_id)
+  {
+
+    $query = "SELECT * FROM users WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows == 1){
+      
+      $this->deleteExpenses($user_id);
+      $this->deleteIncomes($user_id);
+      $this->deleteExpensesCategories($user_id);
+      $this->deleteIncomesCategories($user_id);
+      $this->deletePayments($user_id);
+     
+      return ACTION_OK; 
+    } else return ACTION_FAILED;
+  }
+
+  function deleteExpenses($user_id)
+  {    
+    $query = "DELETE FROM expenses WHERE user_id = '$user_id'";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      }
+      return ACTION_OK; 
+  }
+
+  function deleteIncomes($user_id)
+  {    
+    $query = "DELETE FROM incomes WHERE user_id = '$user_id'";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      }
+      return ACTION_OK; 
+  }
+
+  function deleteExpensesCategories($user_id)
+  {    
+    $query = "DELETE FROM expenses_category WHERE user_id = '$user_id'";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      }
+      return ACTION_OK; 
+  }
+
+  function deleteIncomesCategories($user_id)
+  {    
+    $query = "DELETE FROM incomes_category WHERE user_id = '$user_id'";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      }
+      return ACTION_OK; 
+  }
+
+  function deletePayments($user_id)
+  {    
+    $query = "DELETE FROM payment_methods WHERE user_id = '$user_id'";
+
+      if(!$result = $this->dbo->query($query)){
+        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+        return SERVER_ERROR;
+      }
+      return ACTION_OK; 
+  }
+
   function setDefaultCategories()
   {
     $this->setDefaultExpensesCategories();

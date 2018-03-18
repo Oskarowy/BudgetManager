@@ -55,7 +55,10 @@
 						<i 	class="glyphicon glyphicon-wrench"></i> 
 						Edycja danych Użytkownika
 				</button>
-				<button 	onClick="location.href='index.php?action=showMain'" 
+				<button 	onClick='var result = confirm("Want to delete?");
+									if (result) {
+									    window.location = "index.php?action=deleteUser";
+									}' 
 							class="btn btn-lg btn-block btn-danger ">
 						<i 	class="glyphicon glyphicon-remove"></i> 
 						Usuń swoje konto

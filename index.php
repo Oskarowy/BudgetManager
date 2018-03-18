@@ -54,6 +54,11 @@ try{
       case 'edit':
           header('Location:index.php?action=showEditOptions');
           break;
+      case 'deleteUser':
+          $manager->deleteUser();
+          $manager->logout();
+          header('Location:index.php?action=showMain');
+          break;
     	case 'registerUser':
       		switch($manager->registerUser()):
         		case ACTION_OK:
@@ -144,7 +149,6 @@ try{
             break;
           case ACTION_FAILED:
             $manager->setMessage('Obecnie edycja kategorii nie jest możliwa.');
-            header('Location:index.php?action=showMenu');
             break;
           case SERVER_ERROR:
           default:
