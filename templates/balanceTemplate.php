@@ -1,14 +1,26 @@
 <?php if(!isset($manager)) die();
 
-$today = $manager->getToday(); 
-$y = substr($today, 0, 4);
-$m = substr($today, 5, 2);
+$date = getdate();
+	$d = $date['mday'];
+	$m = $date['mon'];
+	$y = $date['year'];
+	if($d<10) $d = '0'.$d;
+	if($m<10) $m = '0'.$m;
+	$today = $y.'-'.$m.'-'.$d;
+
+	if((isset($_POST['custom_min']))&&(isset($_POST['custom_max']))){
+		$_SESSION['mindate'] = $_POST['custom_min'];
+		$_SESSION['maxdate'] = $_POST['custom_max'];
+		header("Refresh:0; url=index.php?action=checkout&period=customperiod");
+	}
 
 if(isset($_GET['period'])){
 	if($_GET['period']=='previousmonth') {
 		if($m==1) { $m = 12; $y--; } else $m--;
-			$today_last_month = $y.'-'.$m.'-'.$d; 
+			$today_last_month = $y.'-'.$m.'-'.$d;
 			$previous_month_last_day = date("t", strtotime($today_last_month));
+			if($d<10) $d = '0'.$d;
+			if($m<10) $m = '0'.$m;
 			$min_date = $y.'-'.$m.'-01';
 			$max_date = $y.'-'.$m.'-'.$previous_month_last_day;
 		} else if($_GET['period']=='currentmonth'){
@@ -19,10 +31,10 @@ if(isset($_GET['period'])){
 			$min_date = $y.'-01-01';
 			$max_date = $y.'-12-31'; 
 		} else if($_GET['period']=='customperiod') {
-			$min_date = $custom_date_min;
-			$max_date = $custom_date_max; 
+			$min_date = $_SESSION['mindate'];
+			$max_date = $_SESSION['maxdate'];
 		}
-	} else { // to be sure, set again current month as default while role is not set
+	} else { // to be sure, set again current month as default while period is not set
 		$current_month_last_day = date("t", strtotime($today));
 		$min_date = $y.'-'.$m.'-01';
 		$max_date = $y.'-'.$m.'-'.$current_month_last_day;
@@ -75,26 +87,26 @@ if(isset($_GET['period'])){
 			</div>
 			<form 	role="form" 
 					method="post" 
-					action="index.php?action=checkout&period=customperiod">
+					action="">
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="mindate" class="col-md-4">Data początkowa</label>
+						<label for="custom_min" class="col-md-4">Data początkowa</label>
                             <div class="col-md-6">
 								<input 	type="date" 
 										class="form-control" 
-										name="mindate" 
-										id="mindate" 
-										value="">
+										name="custom_min" 
+										id="custom_min" 
+										value="<?php echo($today); ?>">
 							</div>
 					</div>
 					<div class="form-group">
-						<label for="maxdate" class="col-md-4">Data końcowa</label>
+						<label for="custom_max" class="col-md-4">Data końcowa</label>
                             <div class="col-md-6">
 								<input 	type="date" 
 										class="form-control" 
-										name="maxdate" 
-										id="maxdate" 
-										value="">
+										name="custom_max" 
+										id="custom_max" 
+										value="<?php echo($today); ?>">
 							</div>
 					</div>
 				</div>
@@ -158,7 +170,7 @@ if(isset($_GET['period'])){
 												echo "<td>".$income_number."</td>";
 												echo "<td>".$row[4]."</td>";
 												echo "<td>".$row[3]." PLN"."</td>";
-												echo "<td>".ucfirst($row[1])."</td>";
+												echo "<td>".ucfirst($row[9])."</td>";
 												echo "<td>".ucfirst($row[5])."</td>";
 												echo "</tr>";
 												$income_number++;

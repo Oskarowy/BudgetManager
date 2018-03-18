@@ -49,7 +49,7 @@ try{
       		break;
       case 'checkout':
           $period = $_GET['period'];
-          header('Location:index.php?action=showBalance');
+          header("Location:index.php?action=showBalance&period=$period");
           break;
     	case 'registerUser':
       		switch($manager->registerUser()):
