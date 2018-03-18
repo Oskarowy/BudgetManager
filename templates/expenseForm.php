@@ -42,24 +42,43 @@
                             	Sposób płatności
                             </label>
                             <div class="col-md-8" style="text-align: left; margin-left: 20px;">
-                                <label 	class="radio">
-                                <input 	type="radio" 
-                                		name="payment" 
-                                		value="1">
-                                	Gotówka
-                                </label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="payment" 
-										value="2">
-									Karta debetowa
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="payment" 
-										value="3">
-									Karta kredytowa
-								</label>
+                            	<?php 
+                                try{
+                                    if(!$manager->dbo) {
+                                        return SERVER_ERROR;
+                                    }
+                                    else {
+                                        $manager->dbo->query("SET CHARSET utf8");
+                                        $manager->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+                                            
+                                        $user_id = $_SESSION['user_id'];
+
+                                        $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'  ORDER BY `order` ASC";
+
+                                        if(!$result = $manager->dbo->query($query)){
+                                            //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+                                            return SERVER_ERROR;
+                                        }
+
+                                        if($result->num_rows > 0){
+                                                
+                                            while ($row = $result->fetch_row()){
+                                                echo '<label  class="radio">';
+                                                echo '<input  type="radio" name="payment" value="'.$row[0].'"/>';
+                                                echo $row[3];
+                                                echo '</label>';
+                                            }
+                                        } 
+                                        else {
+                                            //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
+                                            return SERVER_ERROR;
+                                        }   
+                                    }
+                                } catch (Exception $e){
+                                    //echo 'Błąd: ' . $e->getMessage();
+                                    exit('Aplikacja chwilowo niedostępna'); 
+                                }
+                                ?>
                             </div>
                         </div>
 						
@@ -67,102 +86,43 @@
                             <label 	for="expcategory" 
                             		class="col-md-3 control-label">Kategoria</label>
                             <div class="col-md-8" style="text-align: left; margin-left: 20px;">
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="1"/>
-									Transport
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="2"/>
-									Książki
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="3"/>
-									Jedzenie
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="4" />
-									Mieszkanie
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="5"/>
-									Telekomunikacja
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="6"/>
-									Opieka zdrowotna
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="7"/>
-									Ubranie
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="8"/>
-									Higiena
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="9"/>
-									Dzieci
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="10"/>
-									Rozrywka
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="11"/>
-									Wycieczka
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="12"/>
-									Oszczędności
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="13"/>
-									Na złotą jesień, czyli emeryturę
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="14"/>
-									Spłata długów
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="15"/>
-									Darowizna
-								</label>
-								<label 	class="radio">
-								<input 	type="radio" 
-										name="expcategory" 
-										value="16"/>
-									Inne wydatki
-								</label>
+                            	<?php 
+                                try{
+                                    if(!$manager->dbo) {
+                                        return SERVER_ERROR;
+                                    }
+                                    else {
+                                        $manager->dbo->query("SET CHARSET utf8");
+                                        $manager->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+                                            
+                                        $user_id = $_SESSION['user_id'];
+
+                                        $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id' ORDER BY `order` ASC";
+
+                                        if(!$result = $manager->dbo->query($query)){
+                                            //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+                                            return SERVER_ERROR;
+                                        }
+
+                                        if($result->num_rows > 0){
+                                                
+                                            while ($row = $result->fetch_row()){
+                                                echo '<label  class="radio">';
+                                                echo '<input  type="radio" name="expcategory" value="'.$row[0].'"/>';
+                                                echo $row[3];
+                                                echo '</label>';
+                                            }
+                                        } 
+                                        else {
+                                            //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
+                                            return SERVER_ERROR;
+                                        }   
+                                    }
+                                } catch (Exception $e){
+                                    //echo 'Błąd: ' . $e->getMessage();
+                                    exit('Aplikacja chwilowo niedostępna'); 
+                                }
+                                ?>
                             </div>
                         </div>
 						

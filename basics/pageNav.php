@@ -24,7 +24,7 @@
 							<?php if($manager->logged): ?>
 	         					<li>
 	         						<div>
-	         							<h4 style="color: white;" >
+	         							<h4 style="color: white; margin-top: 15px;" >
 	         								Zalogowany: <strong><?=$manager->logged->username?></strong>
 	         							</h4>
 	         						</div>
