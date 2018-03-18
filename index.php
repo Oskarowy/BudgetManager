@@ -54,6 +54,28 @@ try{
       case 'edit':
           header('Location:index.php?action=showEditOptions');
           break;
+      case 'editUser':
+          switch($manager->editUser()):
+            case ACTION_OK:
+                $manager->logout();
+                $manager->setMessage('Edycja danych prawidłowa, nastąpiło wylogowanie. Proszę zalogować się ponownie.');
+                header('Location:index.php?action=showLoginForm');
+                return;
+            case PASSWORDS_DO_NOT_MATCH:
+                $manager->setMessage('Hasło musi być takie samo w obu polach!');
+                break;
+            case USER_NAME_ALREADY_EXISTS:
+                $manager->setMessage('Podany adres e-email jest już zarejestrowany!');
+                break;
+            case ACTION_FAILED:
+                $manager->setMessage('Obecnie edycja nie jest możliwa.');
+               break;
+            case SERVER_ERROR:
+              $manager->setMessage('Błąd serwera!');
+            default:   
+          endswitch;
+          header('Location:index.php?action=showEditForm');
+          break;
       case 'deleteUser':
           $manager->deleteUser();
           $manager->logout();

@@ -106,7 +106,7 @@
 			<div class="btn-vertical ">
 				<hr>
 				<label style="font-size: 15px; margin-bottom: 15px;">Edycja konta Użytkownika</label>
-				<button 	onClick="location.href='index.php?action=showMain'" 
+				<button 	onClick="location.href='index.php?action=editUser'" 
 							class="btn btn-lg btn-block btn-warning ">
 						<i 	class="glyphicon glyphicon-wrench"></i> 
 						Edycja danych Użytkownika

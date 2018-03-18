@@ -85,6 +85,9 @@ class ManagerFront extends Manager
         $loggedUserId = $row[0];
         $_SESSION['logged'] = new User($loggedUserId, $loggedUsername);
         $_SESSION['user_id'] = $loggedUserId;
+        $_SESSION['logged_user_name'] = $loggedUsername;
+        $_SESSION['logged_user_mail'] = $row[3];
+        $_SESSION['logged_user_pass'] = $row[2];
         return ACTION_OK;
       }
     }
@@ -108,6 +111,59 @@ class ManagerFront extends Manager
   {
     $reg = new Registration($this->dbo);
       return $reg->registerUser();
+  }
+
+  function editUser()
+  {
+    $user_id =  $_SESSION['user_id'];
+
+    $newEmail = $_POST['editemail'];
+    $newName = $_POST['editname'];
+    $newPass = $_POST['editpass'];
+    $newPass2 = $_POST['editpass2'];
+
+    $query = "SELECT COUNT(*) FROM Users WHERE Email='$newEmail'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows <> 1){
+        unset($_POST['editpass']);
+        unset($_POST['editpass2']);
+        return USER_NAME_ALREADY_EXISTS;
+      }
+    if(($newPass != "") && ($newPass2 != "")){
+      if($newPass != $newPass2){
+        unset($_POST['editpass']);
+        unset($_POST['editpass2']);
+        return PASSWORDS_DO_NOT_MATCH;
+      }
+      unset($_POST['editpass2']);
+      
+      $newPass = crypt($newPass);
+    }
+
+    if($newName != "")
+    { 
+        $cond1 = "`username` = '$newName', ";
+        if($newPass != "") {
+          $cond2 = "`password` = '$newPass', ";
+        } else $cond2 = "";
+      $cond3 = "`email` = '$newEmail'";
+
+    $totalCondition = $cond1 . $cond2 . $cond3;
+
+    $query = "UPDATE Users SET $totalCondition WHERE user_id = '$user_id'";
+
+      if($this->dbo->query($query)){
+        return ACTION_OK;
+      }
+      else{
+        return ACTION_FAILED;
+      }
+    }
   }
 
   function deleteUser()
