@@ -139,6 +139,96 @@ class ManagerFront extends Manager
     } else return ACTION_OK;
   }
 
+  function editCategoryName($category_type){
+
+    $user_id = $_SESSION['user_id'];
+
+    if(isset($_POST['category_id'])){
+      $category_id = $_POST['category_id'];
+    } else $category_id = 0;
+    if(isset($_POST['newCategoryName'])){
+      $newName = $_POST['newCategoryName'];
+    } else $newName = '';
+
+    if($category_id > 0 && $newName != ''){
+      switch ($category_type) {
+        case 'expenses':
+          if($this->editExpensesCategoryName($user_id, $category_id, $newName))
+            return ACTION_OK;
+          break;
+        case 'incomes':
+          if($this->editIncomesCategoryName($user_id, $category_id, $newName))
+            return ACTION_OK;
+          break;
+        case 'payment':
+          if($this->editPaymentName($user_id, $category_id, $newName))
+            return ACTION_OK;
+          break;
+      }
+    } else return ACTION_FAILED;
+
+  }
+
+  function editExpensesCategoryName($user_id, $category_id, $newName)
+  {
+    $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows <> 0){  
+      $query = "UPDATE expenses_category SET `name` = '$newName' WHERE `user_id` = '$user_id' AND `id` = '$category_id'";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+      return ACTION_OK;
+    }
+  }
+
+  function editIncomesCategoryName($user_id, $category_id, $newName)
+  {
+    $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows <> 0){  
+      $query = "UPDATE incomes_category SET `name` = '$newName' WHERE `user_id` = '$user_id' AND `id` = '$category_id'";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+      return ACTION_OK;
+    }
+  }
+
+   function editPaymentName($user_id, $category_id, $newName)
+  {
+    $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows <> 0){  
+      $query = "UPDATE payment_methods SET `payname` = '$newName' WHERE `user_id` = '$user_id' AND `id` = '$category_id'";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+      return ACTION_OK;
+    }
+  }
+
   function setDefaultIncomesCategories()
   {
     $user_id =  $_SESSION['user_id'];
@@ -323,6 +413,108 @@ class ManagerFront extends Manager
     }
 
     return ACTION_OK;
+  }
+
+  function showIncomesCategoriesAsRadio($user_id){
+    try{
+      if(!$this->dbo) {
+        return SERVER_ERROR;
+      }  
+      else {
+        $this->dbo->query("SET CHARSET utf8");
+        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+
+        $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id' ORDER BY `order` ASC";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+        if($result->num_rows > 0){
+          while ($row = $result->fetch_row()){
+            echo '<label  class="radio">';
+            echo '<input  type="radio" name="inccategory" value="'.$row[0].'"/>';
+            echo $row[3];
+            echo '</label>';
+          }
+        } 
+        else {
+          //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
+          return SERVER_ERROR;
+        }   
+      }
+    } catch (Exception $e){
+      //echo 'Błąd: ' . $e->getMessage();
+      exit('Aplikacja chwilowo niedostępna'); 
+      }                            
+  }
+
+  function showExpensesCategoriesAsRadio($user_id){
+    try{
+      if(!$this->dbo) {
+        return SERVER_ERROR;
+      }
+      else {
+        $this->dbo->query("SET CHARSET utf8");
+        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+        
+        $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id' ORDER BY `order` ASC";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+        if($result->num_rows > 0){
+          while ($row = $result->fetch_row()){
+            echo '<label  class="radio">';
+            echo '<input  type="radio" name="expcategory" value="'.$row[0].'"/>';
+            echo $row[3];
+            echo '</label>';
+          }
+        } 
+        else {
+          //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
+          return SERVER_ERROR;
+        }   
+      }
+    } catch (Exception $e){
+      //echo 'Błąd: ' . $e->getMessage();
+      exit('Aplikacja chwilowo niedostępna'); 
+    }
+  }
+
+  function showPaymentsAsRadio($user_id){
+    try{
+      if(!$this->dbo) {
+        return SERVER_ERROR;
+      }
+      else {
+        $this->dbo->query("SET CHARSET utf8");
+        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+
+        $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'  ORDER BY `order` ASC";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+        if($result->num_rows > 0){
+          while ($row = $result->fetch_row()){
+            echo '<label  class="radio">';
+            echo '<input  type="radio" name="payment" value="'.$row[0].'"/>';
+            echo $row[3];
+            echo '</label>';
+          }
+        } 
+        else {
+          //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
+          return SERVER_ERROR;
+        }   
+      }
+    } catch (Exception $e){
+      //echo 'Błąd: ' . $e->getMessage();
+      exit('Aplikacja chwilowo niedostępna'); 
+    }                             
   }
 
 }

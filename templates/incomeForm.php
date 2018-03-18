@@ -42,42 +42,9 @@
                             	Kategoria
                             </label>
                             <div class="col-md-8" style="text-align: left; margin-left: 20px;">
-                                <?php 
-                                try{
-                                    if(!$manager->dbo) {
-                                        return SERVER_ERROR;
-                                    }
-                                    else {
-                                        $manager->dbo->query("SET CHARSET utf8");
-                                        $manager->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
-                                            
-                                        $user_id = $_SESSION['user_id'];
-
-                                        $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id' ORDER BY `order` ASC";
-
-                                        if(!$result = $manager->dbo->query($query)){
-                                            //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-                                            return SERVER_ERROR;
-                                        }
-
-                                        if($result->num_rows > 0){
-                                                
-                                            while ($row = $result->fetch_row()){
-                                                echo '<label  class="radio">';
-                                                echo '<input  type="radio" name="inccategory" value="'.$row[0].'"/>';
-                                                echo $row[3];
-                                                echo '</label>';
-                                            }
-                                        } 
-                                        else {
-                                            //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
-                                            return SERVER_ERROR;
-                                        }   
-                                    }
-                                } catch (Exception $e){
-                                    //echo 'Błąd: ' . $e->getMessage();
-                                    exit('Aplikacja chwilowo niedostępna'); 
-                                }
+                                <?php
+                                    $user_id = $_SESSION['user_id'];
+                                    $manager->showIncomesCategoriesAsRadio($user_id);
                                 ?>
                             </div>
                         </div>

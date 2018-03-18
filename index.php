@@ -51,6 +51,9 @@ try{
           $period = $_GET['period'];
           header("Location:index.php?action=showBalance&period=$period");
           break;
+      case 'edit':
+          header('Location:index.php?action=showEditOptions');
+          break;
     	case 'registerUser':
       		switch($manager->registerUser()):
         		case ACTION_OK:
@@ -128,6 +131,26 @@ try{
               $manager->setMessage('Błąd serwera!');
           endswitch;
           header('Location:index.php?action=addRecord&type=income');
+        break;
+      case 'editCategory':
+      $type = $_GET['type'];
+        switch($manager->editCategoryName($type)):
+          case ACTION_OK:
+            $manager->setMessage('Pomyślnie zmieniono nazwę kategorii.');
+            header('Location:index.php?action=showMenu');
+            return;
+          case FORM_DATA_MISSING:
+            $manager->setMessage('Proszę wypełnić wszystkie pola formularza!');
+            break;
+          case ACTION_FAILED:
+            $manager->setMessage('Obecnie edycja kategorii nie jest możliwa.');
+            header('Location:index.php?action=showMenu');
+            break;
+          case SERVER_ERROR:
+          default:
+            $manager->setMessage('Błąd serwera!');
+        endswitch;
+        header('Location:index.php?action=showMain');
         break;
    		default:
       		include 'templates/mainTemplate.php';

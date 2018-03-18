@@ -21,6 +21,12 @@ require_once (__DIR__ . '/../basics/pageNav.php');
             case 'showLoginForm' :
               include 'templates/loginForm.php';
               break;
+            case 'showEditOptions' :
+              include 'templates/editOptions.php';
+              break;
+            case 'showEditForm':
+              include 'templates/editForm.php';
+              break;
             case 'showRegistrationForm' :
               $manager->showRegistrationForm();
               break;

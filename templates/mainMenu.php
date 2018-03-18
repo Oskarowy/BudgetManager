@@ -19,7 +19,7 @@
 						<i 	class="glyphicon glyphicon-stats"></i> 
 						Przeglądaj bilans
 				</button>
-				<button 	onClick="location.href='zarzadzaj-swoim-budzetem'" 
+				<button 	onClick="location.href='index.php?action=edit'" 
 							class="btn btn-lg btn-block btn-warning ">
 						<i 	class="glyphicon glyphicon-wrench"></i> 
 						Ustawienia
