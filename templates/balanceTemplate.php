@@ -45,6 +45,13 @@ if(isset($_GET['period'])){
 <div class="container">
 	<div class="row">
 		<div class="col-sm-12 col-xs-12">
+			<div class="btn-group pull-right">
+				<button type="button"
+						class="btn btn-success"
+						onClick="location.href='index.php?action=showMenu'" >
+					Powrót do menu głównego		
+				</button>
+			</div>
 			<div class="btn-group pull-right dropdown" style="margin-bottom: 10px;">
 			  <button 	type="button" 
 			  			class="btn btn-info dropdown-toggle"
@@ -119,6 +126,27 @@ if(isset($_GET['period'])){
 		</div>
 
 	  </div>
+	</div>
+	<div class="well main-menu">
+		<div class="row"> 
+			<?php 
+				switch($_GET['period']){
+					case 'currentmonth':
+						$period = "bieżący miesiąc";
+						break;
+					case 'previousmonth':
+						$period = "poprzedni miesiąc";
+						break;
+					case 'currentyear':
+						$period = "bieżący rok";
+						break;
+					case 'customperiod':
+						$period = "niestandardowy okres";
+						break;
+				}
+        	?>
+        	<h3>Wyświetlam bilans za <?=$period?> <br> (od <?=$min_date?> do <?=$max_date?> )</h3>
+		</div>
 	</div>
 	<div class="row">
 		<div class="col-lg-6 col-md-6">
