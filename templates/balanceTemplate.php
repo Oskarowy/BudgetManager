@@ -463,3 +463,20 @@ if(isset($_GET['period'])){
 		</div>
 </div>
 
+<div class="container">
+	<div class="well main-menu">
+		<?php
+			echo "<h1>Bilans w wybranym okresie wynosi ";
+			echo '<strong>'.$_SESSION['balance'].' PLN </strong></h1>';
+				if($_SESSION['balance']>0) echo '<h3 class="text-success"><strong>Gratulacje, świetnie zarządzasz finansami!</strong></h3>';
+				else if($_SESSION['balance']<0) echo '<h3 class="text-danger"><strong>Uważaj, wpadasz w długi!</strong></h3>';
+					
+				if(isset($_SESSION['chart_size'])&&($_SESSION['chart_size']<>0)){
+					echo "<h3>Spójrz, na co wydałeś najwięcej w bieżącym okresie</h3>";
+					echo "<div id=\"chartdiv\"></div>";
+			}
+			if(isset($_SESSION['balance'])) unset($_SESSION['balance']);
+		?>
+		</div>
+	</div>
+
