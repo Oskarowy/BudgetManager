@@ -148,6 +148,87 @@ if(isset($_GET['period'])){
         	<h3>Wyświetlam bilans za <?=$period?> <br> (od <?=$min_date?> do <?=$max_date?> )</h3>
 		</div>
 	</div>
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2">
+			<div class="table-responsive">          
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr class="info">
+							<th colspan="3"><p class="table-heading">Przychody w podziale na kategorie</p></th>
+						</tr>
+						<tr class="info">
+						 <th class="text-center">#</th>
+						 <th class="text-center">Kategoria</th>
+						 <th class="text-center">Kwota</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php
+					try{
+						if(!$manager->dbo) {
+							return SERVER_ERROR;
+						}
+						else {
+							$manager->dbo->query("SET CHARSET utf8");
+							$manager->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+											
+							$user_id = $_SESSION['user_id'];
+										
+							$query = "SELECT i.date, i.category_id, SUM(i.amount), cat.name FROM Incomes i INNER JOIN incomes_category cat 
+									  ON i.user_id = cat.user_id AND i.category_id = cat.id WHERE i.user_id = '$user_id' AND i.date 
+									  BETWEEN '$min_date' AND '$max_date' GROUP BY i.category_id ORDER BY SUM(i.amount) DESC";
+											
+							if(!$result = $manager->dbo->query($query)){
+								//echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+								return SERVER_ERROR;
+							}
+											
+							if($result->num_rows > 0){
+								$income_number = 1;
+								$incomes_in_period = 0;
+								$incomes_sum = 0;
+												
+								while ($row = $result->fetch_row()){													
+									echo '<tr class="info">';
+									echo "<td>".$income_number."</td>";
+									echo "<td>".ucfirst($row[3])."</td>";
+									echo "<td>".$row[2]." PLN"."</td>";
+									echo "</tr>";
+									$income_number++;
+									$incomes_in_period++;
+									$_SESSION['balance']+=$row[2];
+									$incomes_sum +=$row[2];
+								}
+								if($incomes_in_period==0) {
+									echo '<tr class="info">';
+									echo '<td colspan="3">W wybranym okresie Użytkownik nie ma żadnych przychodów!</td>';
+									echo "</tr>";
+								} else {
+									echo '<tr class="info">';
+									echo "<td colspan=\"2\"> <strong> SUMA PRZYCHODÓW </strong></td>";
+									echo "<td> <strong>".$incomes_sum." PLN"."</strong></td>";
+									echo "</tr>";
+								}
+							} else {
+								echo '<tr class="info">';
+								echo '<td colspan="3">W wybranym okresie Użytkownik nie ma żadnych przychodów!</td>';
+								echo "</tr>";
+							}
+										
+						}
+										
+					} catch (Exception $e){
+						//echo 'Błąd: ' . $e->getMessage();
+						exit('Aplikacja chwilowo niedostępna');	
+					}
+					?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 	<div class="row">
 		<div class="col-lg-6 col-md-6">
 			<div class="table-responsive">          
