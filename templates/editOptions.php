@@ -1,3 +1,7 @@
+<?php
+	if(isset($_SESSION['type'])) unset($_SESSION['type']);
+?>
+
 <div class="well main-menu">
 	<div class="row">
 		<div class="col-xs-12 ">
@@ -53,44 +57,21 @@
 						<a type="button" 
 								class="btn btn-success" 
 								data-toggle="modal" 
-								data-target="#setCategoryName">Przychody</a>
+								data-target="#setIncomeName">Przychody</a>
+					</div>
+					<div class="btn-group btn-group-lg" role="group">
+						<a type="button" 
+								class="btn btn-success"
+								data-toggle="modal" 
+								data-target="#setExpenseName">Wydatki</a>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
 						<a type="button" 
 								class="btn btn-success" 
 								data-toggle="modal" 
-								data-target="#setCategoryName">Wydatki</a>
-					</div>
-					<div class="btn-group btn-group-lg" role="group">
-						<a type="button" 
-								class="btn btn-success" 
-								data-toggle="modal" 
-								data-target="#setCategoryName">Sposoby płatności</a>
+								data-target="#setPaymentName">Sposoby płatności</a>
 					</div>
 				</div>		  
-			  <!-- Modal -->
-			  <div class="modal fade" id="setCategoryName" role="dialog">
-			    <div class="modal-dialog modal-sm">
-			      <div class="modal-content">
-			        <div class="modal-header">
-			          <button type="button" class="close" data-dismiss="modal">&times;</button>
-			          <h4 class="modal-title">Podaj nazwę nowej kategorii</h4>
-			        </div>
-			        <div class="modal-body">
-			        	<form role="form" action="index.php?action=addCategory&type=income" method="POST">
-			        		<div class="form-group">
-			        			<input type="text" name="categoryName" id="categoryName" class="form-control" />
-			        		</div>	        	
-			        </div>
-			        <div class="modal-footer">
-			        	<div class="form-group">
-							<input type="submit" name="submit" class="btn btn-success" value="Zatwierdź" >
-						</div>
-			        </div>
-			        </form>
-			      </div>
-			    </div>
-			  </div>
 			<hr>
 			<label style="font-size: 15px;">Usuwanie kategorii</label>
 			<?php $action_type = 'deleteCategory'; ?>
@@ -161,3 +142,72 @@
 		</div>
 	</div>
 </div>
+			  <!-- inc modal -->
+			  <div class="modal fade" id="setIncomeName" role="dialog">
+			    <div class="modal-dialog modal-sm">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal">&times;</button>
+			          <h4 class="modal-title">Podaj nazwę nowej kategorii</h4>
+			        </div>
+			        <div class="modal-body">
+			        	<form role="form" action="index.php?action=addCategory&type=income" method="POST">
+			        		<div class="form-group">
+			        			<input type="text" name="categoryName" id="categoryName" class="form-control" />
+			        		</div>	        	
+			        </div>
+			        <div class="modal-footer">
+			        	<div class="form-group">
+							<input type="submit" name="submit" class="btn btn-success" value="Zatwierdź" >
+						</div>
+			        </div>
+			        </form>
+			      </div>
+			    </div>
+			  </div>
+			 <!-- exp modal -->
+			  <div class="modal fade" id="setExpenseName" role="dialog">
+			    <div class="modal-dialog modal-sm">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal">&times;</button>
+			          <h4 class="modal-title">Podaj nazwę nowej kategorii</h4>
+			        </div>
+			        <div class="modal-body">
+			        	<form role="form" action="index.php?action=addCategory&type=expense" method="POST">
+			        		<div class="form-group">
+			        			<input type="text" name="categoryName" id="categoryName" class="form-control" />
+			        		</div>	        	
+			        </div>
+			        <div class="modal-footer">
+			        	<div class="form-group">
+							<input type="submit" name="submit" class="btn btn-success" value="Zatwierdź" >
+						</div>
+			        </div>
+			        </form>
+			      </div>
+			    </div>
+			  </div>
+			   <!-- pay modal -->
+			  <div class="modal fade" id="setPaymentName" role="dialog">
+			    <div class="modal-dialog modal-sm">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal">&times;</button>
+			          <h4 class="modal-title">Podaj nazwę nowej kategorii</h4>
+			        </div>
+			        <div class="modal-body">
+			        	<form role="form" action="index.php?action=addCategory&type=payment" method="POST">
+			        		<div class="form-group">
+			        			<input type="text" name="categoryName" id="categoryName" class="form-control" />
+			        		</div>	        	
+			        </div>
+			        <div class="modal-footer">
+			        	<div class="form-group">
+							<input type="submit" name="submit" class="btn btn-success" value="Zatwierdź" >
+						</div>
+			        </div>
+			        </form>
+			      </div>
+			    </div>
+			  </div>
