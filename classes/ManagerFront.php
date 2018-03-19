@@ -81,13 +81,10 @@ class ManagerFront extends Manager
         return ACTION_FAILED;
       }
       else{
-        $loggedUsername = $row[1];
-        $loggedUserId = $row[0];
-        $_SESSION['logged'] = new User($loggedUserId, $loggedUsername);
-        $_SESSION['user_id'] = $loggedUserId;
-        $_SESSION['logged_user_name'] = $loggedUsername;
-        $_SESSION['logged_user_mail'] = $row[3];
-        $_SESSION['logged_user_pass'] = $row[2];
+        $userId = $row[0];
+        $username = $row[1];
+        $userMail = $row[3];
+        $_SESSION['logged'] = new User($userId, $username, $userMail);    
         return ACTION_OK;
       }
     }
@@ -211,6 +208,49 @@ class ManagerFront extends Manager
      
       return ACTION_OK; 
     } else return ACTION_FAILED;
+  }
+
+  function addCategory($category_type, $category_name){
+
+    switch ($category_type) {
+      case 'income':
+        $tableName = 'incomes_category';
+        break;
+      case 'expense':
+        $tableName = 'expenses_category';
+        break;
+      case 'payment':
+        $tableName = 'payment_methods';
+        break;
+      default:
+        $tableName = "";
+        break;
+    }
+
+    $tableShort = substr($tableName, 0, 3);
+
+    $user_id =  $_SESSION['user_id'];
+
+    $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows <> 0){
+
+      $highestId = "SELECT MAX(".$tableShort.".id) FROM ".$tableName." AS ".$tableShort." WHERE ".$tableShort.".user_id = '$user_id'";
+      $highestOrder = "SELECT MAX(".$tableShort.".order) FROM ".$tableName." AS ".$tableShort." WHERE ".$tableShort.".user_id = '$user_id'";
+
+      $query = "INSERT INTO ".$tableName." VALUES ((".$highestId.")+1, '$user_id', (".$highestOrder.")+1, '$category_name')";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+      return ACTION_OK;
+    }
   }
 
   function deleteExpenses($user_id)

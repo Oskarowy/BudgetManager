@@ -16,7 +16,7 @@
 					    		<span class="caret"></span>
 					    </button>
 					    <ul class="dropdown-menu">
-					    	<?=$manager->showExpensesCategoriesAsList($action_type);?>
+					    	<?=$manager->showIncomesCategoriesAsList($action_type);?>
 					    </ul>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
@@ -29,7 +29,7 @@
 					    		<span class="caret"></span>
 					    </button>
 					    <ul class="dropdown-menu">
-					    	<?=$manager->showIncomesCategoriesAsList($action_type);?>
+					    	<?=$manager->showExpensesCategoriesAsList($action_type);?>	
 					    </ul>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
@@ -50,15 +50,47 @@
 			<label style="font-size: 15px;">Dodanie nowej kategorii</label>
 				<div class="btn-group btn-group-justified" role="group" aria-label="...">
 					<div class="btn-group btn-group-lg" role="group">
-						<button type="button" class="btn btn-success">Przychody</button>
+						<a type="button" 
+								class="btn btn-success" 
+								data-toggle="modal" 
+								data-target="#setCategoryName">Przychody</a>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
-						<button type="button" class="btn btn-success">Wydatki</button>
+						<a type="button" 
+								class="btn btn-success" 
+								data-toggle="modal" 
+								data-target="#setCategoryName">Wydatki</a>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
-						<button type="button" class="btn btn-success">Sposoby płatności</button>
+						<a type="button" 
+								class="btn btn-success" 
+								data-toggle="modal" 
+								data-target="#setCategoryName">Sposoby płatności</a>
 					</div>
-				</div>
+				</div>		  
+			  <!-- Modal -->
+			  <div class="modal fade" id="setCategoryName" role="dialog">
+			    <div class="modal-dialog modal-sm">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal">&times;</button>
+			          <h4 class="modal-title">Podaj nazwę nowej kategorii</h4>
+			        </div>
+			        <div class="modal-body">
+			        	<form role="form" action="index.php?action=addCategory&type=income" method="POST">
+			        		<div class="form-group">
+			        			<input type="text" name="categoryName" id="categoryName" class="form-control" />
+			        		</div>	        	
+			        </div>
+			        <div class="modal-footer">
+			        	<div class="form-group">
+							<input type="submit" name="submit" class="btn btn-success" value="Zatwierdź" >
+						</div>
+			        </div>
+			        </form>
+			      </div>
+			    </div>
+			  </div>
 			<hr>
 			<label style="font-size: 15px;">Usuwanie kategorii</label>
 			<?php $action_type = 'deleteCategory'; ?>
@@ -73,7 +105,7 @@
 					    		<span class="caret"></span>
 					    </button>
 					    <ul class="dropdown-menu">
-					    	<?=$manager->showExpensesCategoriesAsList($action_type);?>
+					    	<?=$manager->showIncomesCategoriesAsList($action_type);?>
 					    </ul>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
@@ -86,7 +118,7 @@
 					    		<span class="caret"></span>
 					    </button>
 					    <ul class="dropdown-menu">
-					    	<?=$manager->showIncomesCategoriesAsList($action_type);?>
+					    	<?=$manager->showExpensesCategoriesAsList($action_type);?>
 					    </ul>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">

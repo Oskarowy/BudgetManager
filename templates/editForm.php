@@ -12,14 +12,14 @@
                             <label for="editemail" class="col-md-3 control-label">E-mail</label>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="editemail" 
-									value="<?=$_SESSION['logged_user_mail'];?>" >
+									value="<?=$manager->logged->mail;?>" >
                                 </div>
                         </div>                  
                         <div class="form-group">
                             <label for="editname" class="col-md-3 control-label">Imię</label>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="editname" 
-									value="<?=$_SESSION['logged_user_name'];?>">
+									value="<?=$manager->logged->username;?>">
                                 </div>
                         </div>
                         <div class="form-group">

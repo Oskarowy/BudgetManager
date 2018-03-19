@@ -3,10 +3,12 @@ class User
 {
   public $id;
   public $username;
-  function __construct($id, $username)
+  public $mail;
+  function __construct($id, $username, $mail)
   {
     $this->id = $id;
     $this->username = $username;
+    $this->mail = $mail;
   }
 }
 ?>

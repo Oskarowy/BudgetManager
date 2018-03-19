@@ -160,6 +160,39 @@ try{
           endswitch;
           header('Location:index.php?action=addRecord&type=income');
         break;
+      case 'addCategory':
+        $category_type = $_GET['type'];
+        $category_name = $_POST['categoryName'];
+
+        switch ($category_type) {
+          case 'income':
+            $sentence = "nową kategorię przychodów";
+            break;
+          case 'expense':
+            $sentence = "nową kategorię wydatków";
+            break;
+          case 'payment':
+            $sentence = "nowy sposób płatności";
+            break;
+          default:
+            $sentence = "nowy rekord";
+            break;
+        }
+        switch($manager->addCategory($category_type, $category_name)):
+            case ACTION_OK:
+                $manager->setMessage('Pomyślnie dodano '.$sentence.'');
+                header('Location:index.php?action=showMenu');
+                return;
+            case ACTION_FAILED:
+                $manager->setMessage('Obecnie dodanie nowego rekordu nie jest możliwe.');
+               break;
+            case SERVER_ERROR:
+                $manager->setMessage('Błąd serwera!');
+            default:
+                $manager->setMessage("$msg");
+          endswitch;
+          header('Location:index.php?action=showMain');
+        break;
       case 'editCategory':
       $category_type = $_GET['type'];
       $_SESSION['category_id'] = $_GET['category_id'];
