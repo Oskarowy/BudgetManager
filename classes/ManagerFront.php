@@ -907,5 +907,36 @@ class ManagerFront extends Manager
     } else return ACTION_FAILED;
   }
 
+  function generateModal($id, $action_param, $param1 = "", $param2 = "")
+  {
+    $action_param .= $param1;
+    $action_param .= $param2;
+
+    echo <<< EOT
+    <div class="modal fade" id="$id" role="dialog">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Podaj nazwę nowej kategorii</h4>
+              </div>
+              <div class="modal-body">
+                <form role="form" action="index.php?action=$action_param" method="POST">
+                  <div class="form-group">
+                    <input type="text" name="categoryName" id="categoryName" class="form-control" />
+                  </div>            
+              </div>
+              <div class="modal-footer">
+                <div class="form-group">
+              <input type="submit" name="submit" class="btn btn-success" value="Zatwierdź" >
+            </div>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+EOT;
+  }
+
 }
 ?>
