@@ -11,43 +11,22 @@
 			<?php $action_type = 'editCategory'; ?>
 				<div class="btn-group btn-group-justified" role="group" aria-label="...">
 					<div class="btn-group btn-group-lg" role="group">
-					    <button type="button" 
-					    		class="btn btn-primary dropdown-toggle" 
-					    		data-toggle="dropdown" 
-					    		aria-haspopup="true" 
-					    		aria-expanded="true">
-					      	Przychody
-					    		<span class="caret"></span>
-					    </button>
-					    <ul class="dropdown-menu">
-					    	<?=$manager->showIncomesCategoriesAsList($action_type);?>
-					    </ul>
+						<a type="button" 
+								class="btn btn-primary" 
+								data-toggle="modal" 
+								data-target="#editIncomeName">Przychody</a>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
-					    <button type="button" 
-					    		class="btn btn-primary dropdown-toggle" 
-					    		data-toggle="dropdown" 
-					    		aria-haspopup="true" 
-					    		aria-expanded="true">
-					      	Wydatki
-					    		<span class="caret"></span>
-					    </button>
-					    <ul class="dropdown-menu">
-					    	<?=$manager->showExpensesCategoriesAsList($action_type);?>	
-					    </ul>
+						<a type="button" 
+								class="btn btn-primary" 
+								data-toggle="modal" 
+								data-target="#editExpenseName">Wydatki</a>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
-					    <button type="button" 
-					    		class="btn btn-primary dropdown-toggle" 
-					    		data-toggle="dropdown" 
-					    		aria-haspopup="true" 
-					    		aria-expanded="true">
-					      	Sposoby płatności
-					    		<span class="caret"></span>
-					    </button>
-					    <ul class="dropdown-menu">
-					    	<?=$manager->showPaymentsAsList($action_type);?>
-					    </ul>
+						<a type="button" 
+								class="btn btn-primary" 
+								data-toggle="modal" 
+								data-target="#editPaymentName">Sposoby płatności</a>
 					</div>
 				</div>
 			<hr>
@@ -144,7 +123,10 @@
 </div>
 
 <?php 
-	$manager->generateModal("setIncomeName", "addCategory", "&type=income");
-	$manager->generateModal("setExpenseName", "addCategory", "&type=expense");
-	$manager->generateModal("setPaymentName", "addCategory", "&type=payment");
+	$manager->generateSmallModal("setIncomeName", "addCategory", "&type=income");
+	$manager->generateSmallModal("setExpenseName", "addCategory", "&type=expense");
+	$manager->generateSmallModal("setPaymentName", "addCategory", "&type=payment");
+	$manager->generateLargeModal("editIncomeName", "editCategory", "&type=income");
+	$manager->generateLargeModal("editExpenseName", "editCategory", "&type=expense");
+	$manager->generateLargeModal("editPaymentName", "editCategory", "&type=payment");
 ?>

@@ -186,18 +186,19 @@ try{
             case ACTION_FAILED:
                 $manager->setMessage('Obecnie dodanie nowego rekordu nie jest możliwe.');
                break;
-            case SERVER_ERROR:
-                $manager->setMessage('Błąd serwera!');
+            case SERVER_ERROR:          
             default:
-                $manager->setMessage("$msg");
+                $manager->setMessage('Błąd serwera!');
           endswitch;
           header('Location:index.php?action=showMain');
         break;
       case 'editCategory':
       $category_type = $_GET['type'];
-      $_SESSION['category_id'] = $_GET['category_id'];
-      $_SESSION['newCategoryName'] = $_GET['newCategoryName'];
-        switch($manager->editCategoryName($category_type)):
+      $category_name = $_POST['categoryName'];
+      if(isset($_POST['inccategory'])) $category_id = $_POST['inccategory'];
+      if(isset($_POST['expcategory'])) $category_id = $_POST['expcategory'];
+      if(isset($_POST['payment'])) $category_id = $_POST['payment'];
+        switch($manager->editCategoryName($category_type, $category_name, $category_id)):
           case ACTION_OK:
             $manager->setMessage('Pomyślnie zmieniono nazwę kategorii.');
             header('Location:index.php?action=showMenu');

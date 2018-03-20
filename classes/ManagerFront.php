@@ -337,7 +337,7 @@ class ManagerFront extends Manager
     } else return ACTION_OK;
   }
 
-  function editCategoryName($category_type){
+/*  function editCategoryName($category_type){
 
     $user_id = $_SESSION['user_id'];
 
@@ -426,7 +426,7 @@ class ManagerFront extends Manager
       return ACTION_OK;
     }
   }
-
+*/
   function setDefaultIncomesCategories()
   {
     $user_id =  $_SESSION['user_id'];
@@ -807,7 +807,7 @@ class ManagerFront extends Manager
         if($result->num_rows > 0){
           while ($row = $result->fetch_row()){
             echo '<li>';
-            echo '<a href="index.php?action=' . $action_type . '&type=payment&category_id=' . $row[0] . '">';
+            echo '<a href="index.php?action=' . $action_type . '&type=expenses&category_id=' . $row[0] . '">';
             echo $row[3];
             echo '</a></li>';
           }
@@ -907,10 +907,49 @@ class ManagerFront extends Manager
     } else return ACTION_FAILED;
   }
 
-  function generateModal($id, $action_param, $param1 = "", $param2 = "")
+  function editCategoryName($category_type, $category_name, $category_id){
+
+    switch ($category_type) {
+      case 'income':
+        $tableName = 'incomes_category';
+        break;
+      case 'expense':
+        $tableName = 'expenses_category';
+        break;
+      case 'payment':
+        $tableName = 'payment_methods';
+        break;
+      default:
+        $tableName = "";
+        break;
+    }
+
+    $tableShort = substr($tableName, 0, 3);
+
+    $user_id =  $_SESSION['user_id'];
+
+    $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' AND `id` = '$category_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows == 1){
+
+      $query = "UPDATE ".$tableName." SET `name` = '$category_name' WHERE user_id = '$user_id' AND `id` = '$category_id'";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+      return ACTION_OK;
+    }
+  }
+
+  function generateSmallModal($id, $action_param, $param1 = "")
   {
     $action_param .= $param1;
-    $action_param .= $param2;
 
     echo <<< EOT
     <div class="modal fade" id="$id" role="dialog">
@@ -923,7 +962,7 @@ class ManagerFront extends Manager
               <div class="modal-body">
                 <form role="form" action="index.php?action=$action_param" method="POST">
                   <div class="form-group">
-                    <input type="text" name="categoryName" id="categoryName" class="form-control" />
+                    <input type="text" name="categoryName" id="categoryName" class="form-control" required = "true" />
                   </div>            
               </div>
               <div class="modal-footer">
@@ -938,5 +977,59 @@ class ManagerFront extends Manager
 EOT;
   }
 
+function generateLargeModal($id, $action_param, $param1 = "")
+  {
+    $action_param .= $param1;
+
+    echo <<< EOT
+    <div class="modal fade" id="$id" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Wybierz kategorię do edycji i podaj nową nazwę</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form" action="index.php?action=$action_param" method="POST">
+              <div class="form-group">
+                <input type="text" name="categoryName" id="categoryName" class="form-control" required = "true"/>
+              </div>
+              <div class="form-group">
+                  <div class="col-md-8" style="text-align: left; margin-left: 20px;">
+EOT;
+    $radioList = substr($param1, 6);
+    $user_id = $_SESSION['user_id'];
+
+    switch ($radioList) {
+      case 'income':
+        $this->showIncomesCategoriesAsRadio($user_id);
+        break;
+      case 'expense':
+        $this->showExpensesCategoriesAsRadio($user_id);
+        break;
+      case 'payment':
+        $this->showPaymentsAsRadio($user_id);
+        break;
+      default:
+        break;
+    }
+
+    echo <<< EOT
+                  </div>
+              </div>            
+          </div>
+          <div class="modal-footer">
+            <div class="form-group">
+              <input type="submit" name="submit" class="btn btn-success" value="Zatwierdź" >
+            </div>
+          </div>
+            </form>
+        </div>
+      </div>
+    </div>
+EOT;
+  }
+
 }
+
 ?>
