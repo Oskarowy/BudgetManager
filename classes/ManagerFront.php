@@ -695,26 +695,14 @@ class ManagerFront extends Manager
   {
     $user_id =  $_SESSION['user_id'];
     $category_id = $_SESSION['category_id'];
-
-      switch ($category_type) {
-        case 'expenses':
-          if($this->deleteExpensesCategory($user_id, $category_id))
-            return ACTION_OK;
-          break;
-        case 'incomes':
-          if($this->deleteIncomesCategory($user_id, $category_id))
-            return ACTION_OK;
-          break;
-        case 'payment':
-          if($this->deletePaymentMethod($user_id, $category_id))
-            return ACTION_OK;
-          break;
-      }
+    return $this->deleteCategoryFromTable($category_type, $category_id, $user_id);
   }
 
-  function deleteExpensesCategory($user_id, $category_id)
+  function deleteCategoryFromTable($category_type, $category_id, $user_id)
   {
-     $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id'";
+    $tableName = $this->getTableName($category_type);
+
+     $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -723,49 +711,7 @@ class ManagerFront extends Manager
 
     if($result->num_rows >= 1){
       
-      $query = "DELETE FROM expenses_category WHERE user_id = '$user_id' AND id = '$category_id'";
-
-      if(!$result = $this->dbo->query($query)){
-        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-        return SERVER_ERROR;
-      }
-      return ACTION_OK; 
-    } else return ACTION_FAILED;
-  }
-
-  function deleteIncomesCategory($user_id, $category_id)
-  {
-     $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id'";
-
-    if(!$result = $this->dbo->query($query)){
-      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-      return SERVER_ERROR;
-    }
-
-    if($result->num_rows >= 1){
-      
-      $query = "DELETE FROM incomes_category WHERE user_id = '$user_id' AND id = '$category_id'";
-
-      if(!$result = $this->dbo->query($query)){
-        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-        return SERVER_ERROR;
-      }
-      return ACTION_OK; 
-    } else return ACTION_FAILED;
-  }
-
-  function deletePaymentMethod($user_id, $category_id)
-  {
-     $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'";
-
-    if(!$result = $this->dbo->query($query)){
-      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-      return SERVER_ERROR;
-    }
-
-    if($result->num_rows >= 1){
-      
-      $query = "DELETE FROM payment_methods WHERE user_id = '$user_id' AND id = '$category_id'";
+      $query = "DELETE FROM ".$tableName." WHERE user_id = '$user_id' AND id = '$category_id'";
 
       if(!$result = $this->dbo->query($query)){
         //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -911,9 +857,9 @@ EOT;
 
   function getTableName($category_type)
   {
-    if($category_type == 'income') return 'incomes_category';
-    if($category_type == 'expense') return 'expenses_category';
-    if($category_type == 'payment') return 'payment_methods';
+    if($category_type == 'income' || $category_type == 'incomes') return 'incomes_category';
+    if($category_type == 'expense' || $category_type == 'expenses') return 'expenses_category';
+    if($category_type == 'payment' || $category_type == 'payments') return 'payment_methods';
   }
 
 }

@@ -7,6 +7,7 @@
 				unset($_SESSION['category_exists']);
 			}?>
 			<hr>
+			<!--<?php //if(isset($_SESSION['fail'])) echo $_SESSION['fail'];?>-->
 			<div class="btn-vertical ">
 				<button 	onClick="location.href='index.php?action=addRecord&type=income'" 
 							class="btn btn-lg btn-block btn-info ">
