@@ -43,8 +43,7 @@
                             </label>
                             <div class="col-md-8" style="text-align: left; margin-left: 20px;">
                             	<?php 
-                                    $user_id = $_SESSION['user_id'];
-                                    $manager->showPaymentsAsRadio($user_id);
+                                    $manager->showCategoriesAsRadioButtons("payment");
                                 ?>
                             </div>
                         </div>
@@ -54,8 +53,7 @@
                             		class="col-md-3 control-label">Kategoria</label>
                             <div class="col-md-8" style="text-align: left; margin-left: 20px;">
                             	<?php    
-                                    $user_id = $_SESSION['user_id'];
-                                    $manager->showExpensesCategoriesAsRadio($user_id);
+                                    $manager->showCategoriesAsRadioButtons("expense");
                                 ?>
                             </div>
                         </div>

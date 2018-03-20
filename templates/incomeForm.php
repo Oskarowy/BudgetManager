@@ -43,8 +43,7 @@
                             </label>
                             <div class="col-md-8" style="text-align: left; margin-left: 20px;">
                                 <?php
-                                    $user_id = $_SESSION['user_id'];
-                                    $manager->showIncomesCategoriesAsRadio($user_id);
+                                    $manager->showCategoriesAsRadioButtons("income");
                                 ?>
                             </div>
                         </div>

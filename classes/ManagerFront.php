@@ -426,7 +426,24 @@ class ManagerFront extends Manager
     return ACTION_OK;
   }
 
-  function showIncomesCategoriesAsRadio($user_id){
+  function showCategoriesAsRadioButtons($category_type){
+
+    $tableName = $this->getTableName($category_type);
+
+    $user_id =  $_SESSION['user_id'];
+
+    switch($category_type){
+      case 'income':
+        $name = "inccategory";
+        break;
+      case 'expense':
+        $name = "expcategory";
+        break;
+      case 'payment':
+        $name = "payment";
+        break;
+    }
+
     try{
       if(!$this->dbo) {
         return SERVER_ERROR;
@@ -435,7 +452,7 @@ class ManagerFront extends Manager
         $this->dbo->query("SET CHARSET utf8");
         $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
 
-        $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id' ORDER BY `order` ASC";
+        $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' ORDER BY `order` ASC";
 
         if(!$result = $this->dbo->query($query)){
           //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -444,7 +461,7 @@ class ManagerFront extends Manager
         if($result->num_rows > 0){
           while ($row = $result->fetch_row()){
             echo '<label  class="radio">';
-            echo '<input  type="radio" name="inccategory" value="'.$row[0].'"/>';
+            echo '<input  type="radio" name="'.$name.'" value="'.$row[0].'"/>';
             echo $row[3];
             echo '</label>';
           }
@@ -458,74 +475,6 @@ class ManagerFront extends Manager
       //echo 'Błąd: ' . $e->getMessage();
       exit('Aplikacja chwilowo niedostępna'); 
       }                            
-  }
-
-  function showExpensesCategoriesAsRadio($user_id){
-    try{
-      if(!$this->dbo) {
-        return SERVER_ERROR;
-      }
-      else {
-        $this->dbo->query("SET CHARSET utf8");
-        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
-        
-        $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id' ORDER BY `order` ASC";
-
-        if(!$result = $this->dbo->query($query)){
-          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-          return SERVER_ERROR;
-        }
-        if($result->num_rows > 0){
-          while ($row = $result->fetch_row()){
-            echo '<label  class="radio">';
-            echo '<input  type="radio" name="expcategory" value="'.$row[0].'"/>';
-            echo $row[3];
-            echo '</label>';
-          }
-        } 
-        else {
-          //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
-          return SERVER_ERROR;
-        }   
-      }
-    } catch (Exception $e){
-      //echo 'Błąd: ' . $e->getMessage();
-      exit('Aplikacja chwilowo niedostępna'); 
-    }
-  }
-
-  function showPaymentsAsRadio($user_id){
-    try{
-      if(!$this->dbo) {
-        return SERVER_ERROR;
-      }
-      else {
-        $this->dbo->query("SET CHARSET utf8");
-        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
-
-        $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'  ORDER BY `order` ASC";
-
-        if(!$result = $this->dbo->query($query)){
-          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-          return SERVER_ERROR;
-        }
-        if($result->num_rows > 0){
-          while ($row = $result->fetch_row()){
-            echo '<label  class="radio">';
-            echo '<input  type="radio" name="payment" value="'.$row[0].'"/>';
-            echo $row[3];
-            echo '</label>';
-          }
-        } 
-        else {
-          //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
-          return SERVER_ERROR;
-        }   
-      }
-    } catch (Exception $e){
-      //echo 'Błąd: ' . $e->getMessage();
-      exit('Aplikacja chwilowo niedostępna'); 
-    }                             
   }
 
   function showIncomesCategoriesAsList($action_type){
@@ -747,22 +696,9 @@ function generateLargeModal($id, $action_param, $param1 = "")
               <div class="form-group">
                   <div class="col-md-8" style="text-align: left; margin-left: 20px;">
 EOT;
-    $radioList = substr($param1, 6);
-    $user_id = $_SESSION['user_id'];
+    $radioType = substr($param1, 6);
 
-    switch ($radioList) {
-      case 'income':
-        $this->showIncomesCategoriesAsRadio($user_id);
-        break;
-      case 'expense':
-        $this->showExpensesCategoriesAsRadio($user_id);
-        break;
-      case 'payment':
-        $this->showPaymentsAsRadio($user_id);
-        break;
-      default:
-        break;
-    }
+    $this->showCategoriesAsRadioButtons($radioType);
 
     echo <<< EOT
                   </div>
