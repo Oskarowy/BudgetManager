@@ -167,20 +167,7 @@ class ManagerFront extends Manager
 
   function addCategory($category_type, $category_name){
 
-    switch ($category_type) {
-      case 'income':
-        $tableName = 'incomes_category';
-        break;
-      case 'expense':
-        $tableName = 'expenses_category';
-        break;
-      case 'payment':
-        $tableName = 'payment_methods';
-        break;
-      default:
-        $tableName = "";
-        break;
-    }
+    $tableName = $this->getTableName($category_type);
 
     $tableShort = substr($tableName, 0, 3);
 
@@ -268,16 +255,18 @@ class ManagerFront extends Manager
 
   function setDefaultCategories()
   {
-    $this->setDefaultExpensesCategories();
-    $this->setDefaultIncomesCategories();
-    $this->setDefaultPaymentCategories();
+    $this->setDefaultCategoriesFor("income");
+    $this->setDefaultCategoriesFor("expense");
+    $this->setDefaultCategoriesFor("payment");
   }
 
-  function setDefaultExpensesCategories()
+  function setDefaultCategoriesFor($category_type)
   {
+    $tableName = $this->getTableName($category_type);
+
     $user_id =  $_SESSION['user_id'];
 
-    $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id'";
+    $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -286,51 +275,7 @@ class ManagerFront extends Manager
 
     if($result->num_rows == 0){  
       
-      $query = "INSERT INTO expenses_category SELECT def.id, '$user_id', def.order, def.name FROM default_expenses_category AS def";
-
-      if(!$result = $this->dbo->query($query)){
-        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-        return SERVER_ERROR;
-      } 
-    } else return ACTION_OK;
-  }
-
-  function setDefaultIncomesCategories()
-  {
-    $user_id =  $_SESSION['user_id'];
-
-    $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id'";
-
-    if(!$result = $this->dbo->query($query)){
-      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-      return SERVER_ERROR;
-    }
-
-    if($result->num_rows == 0){  
-      
-      $query = "INSERT INTO incomes_category SELECT def.id, '$user_id', def.order, def.name FROM default_incomes_category AS def";
-
-      if(!$result = $this->dbo->query($query)){
-        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-        return SERVER_ERROR;
-      } 
-    } else return ACTION_OK;
-  }
-
-  function setDefaultPaymentCategories()
-  {
-    $user_id =  $_SESSION['user_id'];
-
-    $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'";
-
-    if(!$result = $this->dbo->query($query)){
-      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-      return SERVER_ERROR;
-    }
-
-    if($result->num_rows == 0){  
-      
-      $query = "INSERT INTO payment_methods SELECT def.id, '$user_id', def.order, def.name FROM default_payment_methods AS def";
+      $query = "INSERT INTO ".$tableName." SELECT def.id, '$user_id', def.order, def.name FROM default_".$tableName." AS def";
 
       if(!$result = $this->dbo->query($query)){
         //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -603,7 +548,7 @@ class ManagerFront extends Manager
         if($result->num_rows > 0){
           while ($row = $result->fetch_row()){
             echo '<li>';
-            echo '<a href="index.php?action=' . $action_type . '&type=incomes&category_id=' . $row[0] . '">';
+            echo '<a href="index.php?action=' . $action_type . '&type=income&category_id=' . $row[0] . '">';
             echo $row[3];
             echo '</a></li>';
           }
@@ -639,7 +584,7 @@ class ManagerFront extends Manager
         if($result->num_rows > 0){
           while ($row = $result->fetch_row()){
             echo '<li>';
-            echo '<a href="index.php?action=' . $action_type . '&type=expenses&category_id=' . $row[0] . '">';
+            echo '<a href="index.php?action=' . $action_type . '&type=expense&category_id=' . $row[0] . '">';
             echo $row[3];
             echo '</a></li>';
           }
@@ -857,9 +802,9 @@ EOT;
 
   function getTableName($category_type)
   {
-    if($category_type == 'income' || $category_type == 'incomes') return 'incomes_category';
-    if($category_type == 'expense' || $category_type == 'expenses') return 'expenses_category';
-    if($category_type == 'payment' || $category_type == 'payments') return 'payment_methods';
+    if($category_type == 'income') return 'incomes_category';
+    if($category_type == 'expense') return 'expenses_category';
+    if($category_type == 'payment') return 'payment_methods';
   }
 
 }
