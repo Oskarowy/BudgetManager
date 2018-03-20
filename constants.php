@@ -20,4 +20,5 @@
   define("AMOUNT_NOT_NUMERIC", 201);
   define("TO_LOW_DATE", 202);
   define("TO_HIGH_DATE", 203);
+  define("CATEGORY_NAME_ALREADY_EXISTS", 204);
 ?>

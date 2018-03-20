@@ -206,6 +206,9 @@ try{
           case FORM_DATA_MISSING:
             $manager->setMessage('Proszę wypełnić wszystkie pola formularza!');
             break;
+          case CATEGORY_NAME_ALREADY_EXISTS:
+            $manager->setMessage('Kategoria o takiej nazwie już istnieje. Wybierz inną nazwę!');
+            break;
           case ACTION_FAILED:
             $manager->setMessage('Obecnie edycja kategorii nie jest możliwa.');
             break;

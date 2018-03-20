@@ -2,6 +2,10 @@
 	<div class="row">
 		<div class="col-xs-12 ">
 			<h1>Menu główne</h1>
+			<?php if(isset($_SESSION['category_exists'])){
+				echo '<h3><br />Kategoria o takiej nazwie już istnieje. Wybierz inną nazwę!</h3>';
+				unset($_SESSION['category_exists']);
+			}?>
 			<hr>
 			<div class="btn-vertical ">
 				<button 	onClick="location.href='index.php?action=addRecord&type=income'" 

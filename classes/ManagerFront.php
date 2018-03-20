@@ -675,7 +675,7 @@ class ManagerFront extends Manager
         if($result->num_rows > 0){
           while ($row = $result->fetch_row()){
             echo '<li>';
-            echo '<a href="index.php?action=' . $action_type . '&type=expenses&category_id=' . $row[0] . '">';
+            echo '<a href="index.php?action=' . $action_type . '&type=payment&category_id=' . $row[0] . '">';
             echo $row[3];
             echo '</a></li>';
           }
@@ -777,20 +777,7 @@ class ManagerFront extends Manager
 
   function editCategoryName($category_type, $category_name, $category_id){
 
-    switch ($category_type) {
-      case 'income':
-        $tableName = 'incomes_category';
-        break;
-      case 'expense':
-        $tableName = 'expenses_category';
-        break;
-      case 'payment':
-        $tableName = 'payment_methods';
-        break;
-      default:
-        $tableName = "";
-        break;
-    }
+    $tableName = $this->getTableName($category_type);
 
     $tableShort = substr($tableName, 0, 3);
 
@@ -804,14 +791,18 @@ class ManagerFront extends Manager
     }
 
     if($result->num_rows == 1){
+      if($this->isSuchNameExist($category_name, $category_type)){
+        $_SESSION['category_exists'] = true;
+          return CATEGORY_NAME_ALREADY_EXISTS;
+      } else {
+          $query = "UPDATE ".$tableName." SET `name` = '$category_name' WHERE user_id = '$user_id' AND `id` = '$category_id'";
 
-      $query = "UPDATE ".$tableName." SET `name` = '$category_name' WHERE user_id = '$user_id' AND `id` = '$category_id'";
-
-        if(!$result = $this->dbo->query($query)){
-          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-          return SERVER_ERROR;
-        }
-      return ACTION_OK;
+            if(!$result = $this->dbo->query($query)){
+              //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+              return SERVER_ERROR;
+            }
+          return ACTION_OK;
+      }
     }
   }
 
@@ -896,6 +887,33 @@ EOT;
       </div>
     </div>
 EOT;
+  }
+
+  function isSuchNameExist($category_name, $category_type)
+  {
+    $user_id = $_SESSION['user_id'];
+
+    $tableName = $this->getTableName($category_type);
+
+    $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' AND name = '$category_name'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows >= 1){
+        return true;
+      } else {
+        return false;
+      }
+  }
+
+  function getTableName($category_type)
+  {
+    if($category_type == 'income') return 'incomes_category';
+    if($category_type == 'expense') return 'expenses_category';
+    if($category_type == 'payment') return 'payment_methods';
   }
 
 }
