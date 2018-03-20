@@ -226,6 +226,12 @@ try{
             $manager->setMessage('Wybrana kategoria została usunięta.');
             header('Location:index.php?action=showMenu');
             return;
+          case CATEGORY_HAS_RECORDS:
+            $manager->setMessage('Kategoria została wyłączona, ale nie usunięta z powodu przypisanych do niej rekordów.');
+            break;
+          case LAST_CATEGORY_CANNOT_BE_DELETED:
+            $manager->setMessage('Jest to ostatnia kategoria tego typu, nie może zostać wyłączona ani usunięta...');
+            break;
           case ACTION_FAILED:
             $manager->setMessage('Obecnie usunięcie kategorii nie jest możliwe.');
             break;

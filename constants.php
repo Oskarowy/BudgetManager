@@ -21,4 +21,6 @@
   define("TO_LOW_DATE", 202);
   define("TO_HIGH_DATE", 203);
   define("CATEGORY_NAME_ALREADY_EXISTS", 204);
+  define("CATEGORY_HAS_RECORDS", 205);
+  define("LAST_CATEGORY_CANNOT_BE_DELETED", 206);
 ?>

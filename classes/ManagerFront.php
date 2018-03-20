@@ -182,16 +182,22 @@ class ManagerFront extends Manager
 
     if($result->num_rows <> 0){
 
-      $highestId = "SELECT MAX(".$tableShort.".id) FROM ".$tableName." AS ".$tableShort." WHERE ".$tableShort.".user_id = '$user_id'";
-      $highestOrder = "SELECT MAX(".$tableShort.".order) FROM ".$tableName." AS ".$tableShort." WHERE ".$tableShort.".user_id = '$user_id'";
+      if($this->isSuchNameExist($category_name, $category_type)){
+        $_SESSION['category_exists'] = true;
+          return CATEGORY_NAME_ALREADY_EXISTS;
+      } else {
 
-      $query = "INSERT INTO ".$tableName." VALUES ((".$highestId.")+1, '$user_id', (".$highestOrder.")+1, '$category_name')";
+        $highestId = "SELECT MAX(".$tableShort.".id) FROM ".$tableName." AS ".$tableShort." WHERE ".$tableShort.".user_id = '$user_id'";
+        $highestOrder = "SELECT MAX(".$tableShort.".order) FROM ".$tableName." AS ".$tableShort." WHERE ".$tableShort.".user_id = '$user_id'";
 
-        if(!$result = $this->dbo->query($query)){
-          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-          return SERVER_ERROR;
+        $query = "INSERT INTO ".$tableName." VALUES ((".$highestId.")+1, '$user_id', (".$highestOrder.")+1, '$category_name', 1)";
+
+          if(!$result = $this->dbo->query($query)){
+            //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+            return SERVER_ERROR;
+          }
+          return ACTION_OK;
         }
-      return ACTION_OK;
     }
   }
 
@@ -275,7 +281,7 @@ class ManagerFront extends Manager
 
     if($result->num_rows == 0){  
       
-      $query = "INSERT INTO ".$tableName." SELECT def.id, '$user_id', def.order, def.name FROM default_".$tableName." AS def";
+      $query = "INSERT INTO ".$tableName." SELECT def.id, '$user_id', def.order, def.name, '1' FROM default_".$tableName." AS def";
 
       if(!$result = $this->dbo->query($query)){
         //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -426,7 +432,7 @@ class ManagerFront extends Manager
     return ACTION_OK;
   }
 
-  function showCategoriesAsRadioButtons($category_type){
+  function showCategoriesAsRadioButtons($category_type, $active = 1){
 
     $tableName = $this->getTableName($category_type);
 
@@ -452,7 +458,7 @@ class ManagerFront extends Manager
         $this->dbo->query("SET CHARSET utf8");
         $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
 
-        $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' ORDER BY `order` ASC";
+        $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' AND active = '$active' ORDER BY `order` ASC";
 
         if(!$result = $this->dbo->query($query)){
           //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -477,7 +483,7 @@ class ManagerFront extends Manager
       }                            
   }
 
-  function showCategoriesAsList($action_type, $category_type){
+  function showCategoriesAsList($action_type, $category_type, $active = 1){
     
     $tableName = $this->getTableName($category_type);
 
@@ -491,7 +497,7 @@ class ManagerFront extends Manager
         $this->dbo->query("SET CHARSET utf8");
         $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
 
-        $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' ORDER BY `order` ASC";
+        $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' AND active = '$active' ORDER BY `order` ASC";
 
         if(!$result = $this->dbo->query($query)){
           //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -535,18 +541,89 @@ class ManagerFront extends Manager
     }
 
     if($result->num_rows >= 1){
+
+      $checkPoint = $this->checkForRecordsInCategory($category_type, $category_id);
+
+      switch($checkPoint){
+        case CATEGORY_HAS_RECORDS:
+          return CATEGORY_HAS_RECORDS;
+          break;
+        case LAST_CATEGORY_CANNOT_BE_DELETED:
+          return LAST_CATEGORY_CANNOT_BE_DELETED;
+          break;
+      }
       
       $query = "DELETE FROM ".$tableName." WHERE user_id = '$user_id' AND id = '$category_id'";
+
+        if(!$result = $this->dbo->query($query)){
+          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+          return SERVER_ERROR;
+        }
+        return ACTION_OK; 
+      } else return ACTION_FAILED;
+  }
+
+  function checkForRecordsInCategory($category_type, $category_id)
+  {
+    $user_id =  $_SESSION['user_id'];
+
+    $categoriesTableName = $this->getTableName($category_type);
+
+    $recordsTableName = $this->getTableName($categoriesTableName);
+
+    switch ($category_type) {
+      case 'income':
+      case 'expense':
+        $condition = "`category_id` = '$category_id'";
+        break;
+      case 'payment':
+        $condition = "`payment_id` = '$category_id'";
+        break;
+    }
+
+    $query = "SELECT * FROM ".$recordsTableName." WHERE user_id = '$user_id' AND ".$condition;
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows >= 1){
+      if($this->checkIfLastActiveCategory($categoriesTableName) == LAST_CATEGORY_CANNOT_BE_DELETED)
+        $_SESSION['last_active_category'] = LAST_CATEGORY_CANNOT_BE_DELETED;
+        return LAST_CATEGORY_CANNOT_BE_DELETED;
+
+      $query = "UPDATE ".$categoriesTableName." SET `active` = 0 WHERE user_id = '$user_id' AND `id` = '$category_id'";  
 
       if(!$result = $this->dbo->query($query)){
         //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
         return SERVER_ERROR;
       }
-      return ACTION_OK; 
-    } else return ACTION_FAILED;
+      return CATEGORY_HAS_RECORDS;
+
+    } return ACTION_OK;
   }
 
-  function editCategoryName($category_type, $category_name, $category_id){
+  function checkIfLastActiveCategory($categoriesTableName)
+  {
+    $user_id =  $_SESSION['user_id'];
+
+    $query = "SELECT * FROM ".$categoriesTableName." WHERE user_id = '$user_id' AND active = 1";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows == 1){
+      return LAST_CATEGORY_CANNOT_BE_DELETED;
+      } else {
+        return ACTION_OK;
+      }
+  }
+
+  function editCategoryName($category_type, $category_name, $category_id)
+  {
 
     $tableName = $this->getTableName($category_type);
 
@@ -672,6 +749,9 @@ EOT;
     if($category_type == 'income') return 'incomes_category';
     if($category_type == 'expense') return 'expenses_category';
     if($category_type == 'payment') return 'payment_methods';
+    if($category_type == 'incomes_category') return 'incomes';
+    if($category_type == 'expenses_category') return 'expenses';
+    if($category_type == 'payment_methods') return 'expenses';
   }
 
 }

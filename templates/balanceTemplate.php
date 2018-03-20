@@ -431,7 +431,7 @@ if(isset($_GET['period'])){
 										echo "<td>".$expense_number."</td>";
 										echo "<td>".$row[5]."</td>";
 										echo "<td>".$row[4]." PLN"."</td>";
-										echo "<td>".ucfirst($row[14])."</td>";
+										echo "<td>".ucfirst($row[15])."</td>";
 										echo "<td>".ucfirst($row[10])."</td>";
 										echo "<td>".ucfirst($row[6])."</td>";
 										echo "</tr>";
