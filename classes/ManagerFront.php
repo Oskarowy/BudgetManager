@@ -82,6 +82,7 @@ class ManagerFront extends Manager
       }
       else{
         $userId = $row[0];
+        $_SESSION['user_id'] = $userId;
         $username = $row[1];
         $userMail = $row[3];
         $_SESSION['logged'] = new User($userId, $username, $userMail);    
@@ -95,6 +96,7 @@ class ManagerFront extends Manager
     $this->logged = null;
     if(isset($_SESSION['logged'])){
       unset($_SESSION['logged']);
+      unset($_SESSION['user_id']);
     }
   }
   
@@ -163,53 +165,6 @@ class ManagerFront extends Manager
     }
   }
 
-  function deleteUser()
-  {
-    $user_id =  $_SESSION['user_id'];
-
-    $query = "SELECT * FROM users WHERE user_id = '$user_id'";
-
-    if(!$result = $this->dbo->query($query)){
-      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-      return SERVER_ERROR;
-    }
-
-    if($result->num_rows == 1){
-
-      $this->deleteDataFromAllTablesOfCurrentUser($user_id);
-      
-      $query = "DELETE FROM Users WHERE user_id = '$user_id'";
-
-      if(!$result = $this->dbo->query($query)){
-        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-        return SERVER_ERROR;
-      }
-      return ACTION_OK; 
-    } else return ACTION_FAILED;
-  }
-
-  function deleteDataFromAllTablesOfCurrentUser($user_id)
-  {
-
-    $query = "SELECT * FROM users WHERE user_id = '$user_id'";
-
-    if(!$result = $this->dbo->query($query)){
-      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-      return SERVER_ERROR;
-    }
-
-    if($result->num_rows == 1){
-      
-      $this->deleteExpenses($user_id);
-      $this->deleteIncomes($user_id);
-      $this->deleteExpensesCategories($user_id);
-      $this->deleteIncomesCategories($user_id);
-      $this->deletePayments($user_id);
-     
-      return ACTION_OK; 
-    } else return ACTION_FAILED;
-  }
-
   function addCategory($category_type, $category_name){
 
     switch ($category_type) {
@@ -253,53 +208,56 @@ class ManagerFront extends Manager
     }
   }
 
-  function deleteExpenses($user_id)
-  {    
-    $query = "DELETE FROM expenses WHERE user_id = '$user_id'";
+  function deleteUser()
+  {
+    $user_id =  $_SESSION['user_id'];
+
+    $query = "SELECT * FROM users WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows == 1){
+
+      $this->deleteDataFromAllTablesOfCurrentUser($user_id);
+      
+      $query = "DELETE FROM Users WHERE user_id = '$user_id'";
 
       if(!$result = $this->dbo->query($query)){
         //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
         return SERVER_ERROR;
       }
       return ACTION_OK; 
+    } else return ACTION_FAILED;
   }
 
-  function deleteIncomes($user_id)
-  {    
-    $query = "DELETE FROM incomes WHERE user_id = '$user_id'";
+  function deleteDataFromAllTablesOfCurrentUser($user_id)
+  {
 
-      if(!$result = $this->dbo->query($query)){
-        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-        return SERVER_ERROR;
-      }
+    $query = "SELECT * FROM users WHERE user_id = '$user_id'";
+
+    if(!$result = $this->dbo->query($query)){
+      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
+      return SERVER_ERROR;
+    }
+
+    if($result->num_rows == 1){
+      
+      $this->deleteDataFromTable("expenses", $user_id);
+      $this->deleteDataFromTable("incomes", $user_id);
+      $this->deleteDataFromTable("payment_methods", $user_id);
+      $this->deleteDataFromTable("incomes_category", $user_id);
+      $this->deleteDataFromTable("expenses_category", $user_id);
+     
       return ACTION_OK; 
+    } else return ACTION_FAILED;
   }
 
-  function deleteExpensesCategories($user_id)
+  function deleteDataFromTable($table_name, $user_id)
   {    
-    $query = "DELETE FROM expenses_category WHERE user_id = '$user_id'";
-
-      if(!$result = $this->dbo->query($query)){
-        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-        return SERVER_ERROR;
-      }
-      return ACTION_OK; 
-  }
-
-  function deleteIncomesCategories($user_id)
-  {    
-    $query = "DELETE FROM incomes_category WHERE user_id = '$user_id'";
-
-      if(!$result = $this->dbo->query($query)){
-        //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-        return SERVER_ERROR;
-      }
-      return ACTION_OK; 
-  }
-
-  function deletePayments($user_id)
-  {    
-    $query = "DELETE FROM payment_methods WHERE user_id = '$user_id'";
+    $query = "DELETE FROM ".$table_name." WHERE user_id = '$user_id'";
 
       if(!$result = $this->dbo->query($query)){
         //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -337,96 +295,6 @@ class ManagerFront extends Manager
     } else return ACTION_OK;
   }
 
-/*  function editCategoryName($category_type){
-
-    $user_id = $_SESSION['user_id'];
-
-    if(isset($_SESSION['category_id'])){
-      $category_id = $_SESSION['category_id'];
-    } else $category_id = 0;
-    if(isset($_SESSION['newCategoryName'])){
-      $newName = $_SESSION['newCategoryName'];
-    } else $newName = '';
-
-    if($category_id > 0 && $newName != ''){
-      switch ($category_type) {
-        case 'expenses':
-          if($this->editExpensesCategoryName($user_id, $category_id, $newName))
-            return ACTION_OK;
-          break;
-        case 'incomes':
-          if($this->editIncomesCategoryName($user_id, $category_id, $newName))
-            return ACTION_OK;
-          break;
-        case 'payment':
-          if($this->editPaymentName($user_id, $category_id, $newName))
-            return ACTION_OK;
-          break;
-      }
-    } else return ACTION_FAILED;
-
-  }
-
-  function editExpensesCategoryName($user_id, $category_id, $newName)
-  {
-    $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id'";
-
-    if(!$result = $this->dbo->query($query)){
-      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-      return SERVER_ERROR;
-    }
-
-    if($result->num_rows <> 0){  
-      $query = "UPDATE expenses_category SET `name` = '$newName' WHERE `user_id` = '$user_id' AND `id` = '$category_id'";
-
-        if(!$result = $this->dbo->query($query)){
-          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-          return SERVER_ERROR;
-        }
-      return ACTION_OK;
-    }
-  }
-
-  function editIncomesCategoryName($user_id, $category_id, $newName)
-  {
-    $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id'";
-
-    if(!$result = $this->dbo->query($query)){
-      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-      return SERVER_ERROR;
-    }
-
-    if($result->num_rows <> 0){  
-      $query = "UPDATE incomes_category SET `name` = '$newName' WHERE `user_id` = '$user_id' AND `id` = '$category_id'";
-
-        if(!$result = $this->dbo->query($query)){
-          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-          return SERVER_ERROR;
-        }
-      return ACTION_OK;
-    }
-  }
-
-   function editPaymentName($user_id, $category_id, $newName)
-  {
-    $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'";
-
-    if(!$result = $this->dbo->query($query)){
-      //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-      return SERVER_ERROR;
-    }
-
-    if($result->num_rows <> 0){  
-      $query = "UPDATE payment_methods SET `payname` = '$newName' WHERE `user_id` = '$user_id' AND `id` = '$category_id'";
-
-        if(!$result = $this->dbo->query($query)){
-          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-          return SERVER_ERROR;
-        }
-      return ACTION_OK;
-    }
-  }
-*/
   function setDefaultIncomesCategories()
   {
     $user_id =  $_SESSION['user_id'];
