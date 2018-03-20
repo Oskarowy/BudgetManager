@@ -477,7 +477,10 @@ class ManagerFront extends Manager
       }                            
   }
 
-  function showIncomesCategoriesAsList($action_type){
+  function showCategoriesAsList($action_type, $category_type){
+    
+    $tableName = $this->getTableName($category_type);
+
     $user_id =  $_SESSION['user_id'];
 
     try{
@@ -488,7 +491,7 @@ class ManagerFront extends Manager
         $this->dbo->query("SET CHARSET utf8");
         $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
 
-        $query = "SELECT * FROM incomes_category WHERE user_id = '$user_id' ORDER BY `order` ASC";
+        $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' ORDER BY `order` ASC";
 
         if(!$result = $this->dbo->query($query)){
           //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -497,7 +500,7 @@ class ManagerFront extends Manager
         if($result->num_rows > 0){
           while ($row = $result->fetch_row()){
             echo '<li>';
-            echo '<a href="index.php?action=' . $action_type . '&type=income&category_id=' . $row[0] . '">';
+            echo '<a href="index.php?action=' . $action_type . '&type='.$category_type.'&category_id=' . $row[0] . '">';
             echo $row[3];
             echo '</a></li>';
           }
@@ -511,78 +514,6 @@ class ManagerFront extends Manager
       //echo 'Błąd: ' . $e->getMessage();
       exit('Aplikacja chwilowo niedostępna'); 
       }                            
-  }
-
-  function showExpensesCategoriesAsList($action_type){
-    $user_id =  $_SESSION['user_id'];
-
-    try{
-      if(!$this->dbo) {
-        return SERVER_ERROR;
-      }
-      else {
-        $this->dbo->query("SET CHARSET utf8");
-        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
-        
-        $query = "SELECT * FROM expenses_category WHERE user_id = '$user_id' ORDER BY `order` ASC";
-
-        if(!$result = $this->dbo->query($query)){
-          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-          return SERVER_ERROR;
-        }
-        if($result->num_rows > 0){
-          while ($row = $result->fetch_row()){
-            echo '<li>';
-            echo '<a href="index.php?action=' . $action_type . '&type=expense&category_id=' . $row[0] . '">';
-            echo $row[3];
-            echo '</a></li>';
-          }
-        } 
-        else {
-          //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
-          return SERVER_ERROR;
-        }   
-      }
-    } catch (Exception $e){
-      //echo 'Błąd: ' . $e->getMessage();
-      exit('Aplikacja chwilowo niedostępna'); 
-    }
-  }
-
-  function showPaymentsAsList($action_type){
-    $user_id =  $_SESSION['user_id'];
-
-    try{
-      if(!$this->dbo) {
-        return SERVER_ERROR;
-      }
-      else {
-        $this->dbo->query("SET CHARSET utf8");
-        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
-
-        $query = "SELECT * FROM payment_methods WHERE user_id = '$user_id'  ORDER BY `order` ASC";
-
-        if(!$result = $this->dbo->query($query)){
-          //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
-          return SERVER_ERROR;
-        }
-        if($result->num_rows > 0){
-          while ($row = $result->fetch_row()){
-            echo '<li>';
-            echo '<a href="index.php?action=' . $action_type . '&type=payment&category_id=' . $row[0] . '">';
-            echo $row[3];
-            echo '</a></li>';
-          }
-        } 
-        else {
-          //echo 'Wystąpił błąd: brak kategorii dla danego Użytkownika';
-          return SERVER_ERROR;
-        }   
-      }
-    } catch (Exception $e){
-      //echo 'Błąd: ' . $e->getMessage();
-      exit('Aplikacja chwilowo niedostępna'); 
-    }                             
   }
 
   function deleteCategory($category_type)

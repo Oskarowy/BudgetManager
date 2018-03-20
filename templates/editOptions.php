@@ -65,7 +65,7 @@
 					    		<span class="caret"></span>
 					    </button>
 					    <ul class="dropdown-menu">
-					    	<?=$manager->showIncomesCategoriesAsList($action_type);?>
+					    	<?=$manager->showCategoriesAsList($action_type, "income");?>
 					    </ul>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
@@ -78,7 +78,7 @@
 					    		<span class="caret"></span>
 					    </button>
 					    <ul class="dropdown-menu">
-					    	<?=$manager->showExpensesCategoriesAsList($action_type);?>
+					    	<?=$manager->showCategoriesAsList($action_type, "expense");?>
 					    </ul>
 					</div>
 					<div class="btn-group btn-group-lg" role="group">
@@ -91,7 +91,7 @@
 					    		<span class="caret"></span>
 					    </button>
 					    <ul class="dropdown-menu">
-					    	<?=$manager->showPaymentsAsList($action_type);?>
+					    	<?=$manager->showCategoriesAsList($action_type, "payment");?>
 					    </ul>
 					</div>
 				</div>
