@@ -63,7 +63,7 @@ class ManagerFront extends Manager
     $pass = $this->dbo->real_escape_string($pass);
     
     $query = "SELECT `user_id`, `username`, `password`, `email` "
-           . "FROM Users WHERE `username`='$username' OR `email`='$username'";
+           . "FROM users WHERE `username`='$username' OR `email`='$username'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -112,6 +112,11 @@ class ManagerFront extends Manager
       return $reg->registerUser();
   }
 
+  function setCharsetAndNames(){
+    $this->dbo->query("SET CHARSET utf8");
+    $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+  }
+
   function editUser()
   {
     $user_id =  $_SESSION['user_id'];
@@ -121,7 +126,7 @@ class ManagerFront extends Manager
     $newPass = $_POST['editpass'];
     $newPass2 = $_POST['editpass2'];
 
-    $query = "SELECT COUNT(*) FROM Users WHERE Email='$newEmail'";
+    $query = "SELECT COUNT(*) FROM users WHERE `email`='$newEmail'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -154,7 +159,9 @@ class ManagerFront extends Manager
 
     $totalCondition = $cond1 . $cond2 . $cond3;
 
-    $query = "UPDATE Users SET $totalCondition WHERE user_id = '$user_id'";
+    $this->setCharsetAndNames();
+
+    $query = "UPDATE users SET $totalCondition WHERE `user_id` = '$user_id'";
 
       if($this->dbo->query($query)){
         return ACTION_OK;
@@ -173,7 +180,7 @@ class ManagerFront extends Manager
 
     $user_id =  $_SESSION['user_id'];
 
-    $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id'";
+    $query = "SELECT * FROM ".$tableName." WHERE `user_id` = '$user_id'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -186,6 +193,7 @@ class ManagerFront extends Manager
         $_SESSION['category_exists'] = true;
           return CATEGORY_NAME_ALREADY_EXISTS;
       } else {
+        $this->setCharsetAndNames(); 
 
         $highestId = "SELECT MAX(".$tableShort.".id) FROM ".$tableName." AS ".$tableShort." WHERE ".$tableShort.".user_id = '$user_id'";
         $highestOrder = "SELECT MAX(".$tableShort.".order) FROM ".$tableName." AS ".$tableShort." WHERE ".$tableShort.".user_id = '$user_id'";
@@ -205,7 +213,7 @@ class ManagerFront extends Manager
   {
     $user_id =  $_SESSION['user_id'];
 
-    $query = "SELECT * FROM users WHERE user_id = '$user_id'";
+    $query = "SELECT * FROM users WHERE `user_id` = '$user_id'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -216,7 +224,7 @@ class ManagerFront extends Manager
 
       $this->deleteDataFromAllTablesOfCurrentUser($user_id);
       
-      $query = "DELETE FROM Users WHERE user_id = '$user_id'";
+      $query = "DELETE FROM users WHERE `user_id` = '$user_id'";
 
       if(!$result = $this->dbo->query($query)){
         //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -250,7 +258,7 @@ class ManagerFront extends Manager
 
   function deleteDataFromTable($table_name, $user_id)
   {    
-    $query = "DELETE FROM ".$table_name." WHERE user_id = '$user_id'";
+    $query = "DELETE FROM ".$table_name." WHERE `user_id` = '$user_id'";
 
       if(!$result = $this->dbo->query($query)){
         //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -272,14 +280,16 @@ class ManagerFront extends Manager
 
     $user_id =  $_SESSION['user_id'];
 
-    $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id'";
+    $query = "SELECT * FROM ".$tableName." WHERE `user_id` = '$user_id'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
       return SERVER_ERROR;
     }
 
-    if($result->num_rows == 0){  
+    if($result->num_rows == 0){ 
+
+    $this->setCharsetAndNames();  
       
       $query = "INSERT INTO ".$tableName." SELECT def.id, '$user_id', def.order, def.name, '1' FROM default_".$tableName." AS def";
 
@@ -330,7 +340,9 @@ class ManagerFront extends Manager
 
     if($control_test==false) return ACTION_FAILED;
 
-    $query = "INSERT INTO Expenses VALUES "
+    $this->setCharsetAndNames(); 
+
+    $query = "INSERT INTO expenses VALUES "
            . "(NULL, '$expcategory', '$payment', '$user_id', '$expamount', '$expdate', '$expcomment' )";
 
     if(!$this->dbo->query($query)){
@@ -384,7 +396,9 @@ class ManagerFront extends Manager
 
     if($control_test==false) return ACTION_FAILED;
 
-    $query = "INSERT INTO Incomes VALUES "
+    $this->setCharsetAndNames(); 
+
+    $query = "INSERT INTO incomes VALUES "
            . "(NULL, '$inccategory', '$user_id', '$incamount', '$incdate', '$inccomment')";
 
     if(!$this->dbo->query($query)){
@@ -455,10 +469,9 @@ class ManagerFront extends Manager
         return SERVER_ERROR;
       }  
       else {
-        $this->dbo->query("SET CHARSET utf8");
-        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+        $this->setCharsetAndNames(); 
 
-        $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' AND active = '$active' ORDER BY `order` ASC";
+        $query = "SELECT * FROM ".$tableName." WHERE `user_id` = '$user_id' AND `active` = '$active' ORDER BY `order` ASC";
 
         if(!$result = $this->dbo->query($query)){
           //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -494,10 +507,9 @@ class ManagerFront extends Manager
         return SERVER_ERROR;
       }  
       else {
-        $this->dbo->query("SET CHARSET utf8");
-        $this->dbo->query("SET NAMES `utf8` COLLATE `utf8_polish_ci`"); 
+        $this->setCharsetAndNames();  
 
-        $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' AND active = '$active' ORDER BY `order` ASC";
+        $query = "SELECT * FROM ".$tableName." WHERE `user_id` = '$user_id' AND `active` = '$active' ORDER BY `order` ASC";
 
         if(!$result = $this->dbo->query($query)){
           //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -533,7 +545,7 @@ class ManagerFront extends Manager
   {
     $tableName = $this->getTableName($category_type);
 
-     $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id'";
+     $query = "SELECT * FROM ".$tableName." WHERE `user_id` = '$user_id'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -546,6 +558,7 @@ class ManagerFront extends Manager
 
       switch($checkPoint){
         case CATEGORY_HAS_RECORDS:
+          $_SESSION['category_has_records']=true;
           return CATEGORY_HAS_RECORDS;
           break;
         case LAST_CATEGORY_CANNOT_BE_DELETED:
@@ -553,7 +566,7 @@ class ManagerFront extends Manager
           break;
       }
       
-      $query = "DELETE FROM ".$tableName." WHERE user_id = '$user_id' AND id = '$category_id'";
+      $query = "DELETE FROM ".$tableName." WHERE `user_id` = '$user_id' AND id = '$category_id'";
 
         if(!$result = $this->dbo->query($query)){
           //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -581,7 +594,7 @@ class ManagerFront extends Manager
         break;
     }
 
-    $query = "SELECT * FROM ".$recordsTableName." WHERE user_id = '$user_id' AND ".$condition;
+    $query = "SELECT * FROM ".$recordsTableName." WHERE `user_id` = '$user_id' AND ".$condition;
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -589,11 +602,11 @@ class ManagerFront extends Manager
     }
 
     if($result->num_rows >= 1){
-      if($this->checkIfLastActiveCategory($categoriesTableName) == LAST_CATEGORY_CANNOT_BE_DELETED)
+      if($this->checkIfLastActiveCategory($categoriesTableName) == LAST_CATEGORY_CANNOT_BE_DELETED){
         $_SESSION['last_active_category'] = LAST_CATEGORY_CANNOT_BE_DELETED;
         return LAST_CATEGORY_CANNOT_BE_DELETED;
-
-      $query = "UPDATE ".$categoriesTableName." SET `active` = 0 WHERE user_id = '$user_id' AND `id` = '$category_id'";  
+      }
+      $query = "UPDATE ".$categoriesTableName." SET `active` = 0 WHERE `user_id` = '$user_id' AND `id` = '$category_id'";  
 
       if(!$result = $this->dbo->query($query)){
         //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -608,7 +621,7 @@ class ManagerFront extends Manager
   {
     $user_id =  $_SESSION['user_id'];
 
-    $query = "SELECT * FROM ".$categoriesTableName." WHERE user_id = '$user_id' AND active = 1";
+    $query = "SELECT * FROM ".$categoriesTableName." WHERE `user_id` = '$user_id' AND `active` = 1";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -631,7 +644,7 @@ class ManagerFront extends Manager
 
     $user_id =  $_SESSION['user_id'];
 
-    $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' AND `id` = '$category_id'";
+    $query = "SELECT * FROM ".$tableName." WHERE `user_id` = '$user_id' AND `id` = '$category_id'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -643,7 +656,9 @@ class ManagerFront extends Manager
         $_SESSION['category_exists'] = true;
           return CATEGORY_NAME_ALREADY_EXISTS;
       } else {
-          $query = "UPDATE ".$tableName." SET `name` = '$category_name' WHERE user_id = '$user_id' AND `id` = '$category_id'";
+        $this->setCharsetAndNames(); 
+
+          $query = "UPDATE ".$tableName." SET `name` = '$category_name' WHERE `user_id` = '$user_id' AND `id` = '$category_id'";
 
             if(!$result = $this->dbo->query($query)){
               //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';
@@ -730,7 +745,7 @@ EOT;
 
     $tableName = $this->getTableName($category_type);
 
-    $query = "SELECT * FROM ".$tableName." WHERE user_id = '$user_id' AND name = '$category_name'";
+    $query = "SELECT * FROM ".$tableName." WHERE `user_id` = '$user_id' AND `name` = '$category_name'";
 
     if(!$result = $this->dbo->query($query)){
       //echo 'Wystąpił błąd: nieprawidłowe zapytanie...';

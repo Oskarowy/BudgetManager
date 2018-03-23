@@ -175,7 +175,7 @@ if(isset($_GET['period'])){
 											
 							$user_id = $_SESSION['user_id'];
 										
-							$query = "SELECT i.date, i.category_id, SUM(i.amount), cat.name FROM Incomes i INNER JOIN incomes_category cat 
+							$query = "SELECT i.date, i.category_id, SUM(i.amount), cat.name FROM incomes i INNER JOIN incomes_category cat 
 									  ON i.user_id = cat.user_id AND i.category_id = cat.id WHERE i.user_id = '$user_id' AND i.date 
 									  BETWEEN '$min_date' AND '$max_date' GROUP BY i.category_id ORDER BY SUM(i.amount) DESC";
 											
@@ -249,7 +249,7 @@ if(isset($_GET['period'])){
 						
 							$user_id = $_SESSION['user_id'];
 
-							$query = "SELECT e.date, e.category_id, SUM(e.amount), cat.name FROM Expenses e INNER JOIN expenses_category cat 
+							$query = "SELECT e.date, e.category_id, SUM(e.amount), cat.name FROM expenses e INNER JOIN expenses_category cat 
 									  ON e.category_id = cat.id AND e.user_id = cat.user_id WHERE e.user_id = '$user_id' AND date 
 									  BETWEEN '$min_date' AND '$max_date' GROUP BY e.category_id ORDER BY SUM(e.amount) DESC";
 											
@@ -334,7 +334,7 @@ if(isset($_GET['period'])){
 										
 									$user_id = $_SESSION['user_id'];
 
-									$query = "SELECT * FROM Incomes i INNER JOIN incomes_category cat ON i.user_id = cat.user_id 
+									$query = "SELECT * FROM incomes i INNER JOIN incomes_category cat ON i.user_id = cat.user_id 
 											  AND i.category_id = cat.id WHERE i.user_id = '$user_id' ORDER BY amount DESC";
 
 									if(!$result = $manager->dbo->query($query)){
@@ -411,7 +411,7 @@ if(isset($_GET['period'])){
 								
 									$user_id = $_SESSION['user_id'];
 
-									$query = "SELECT * FROM Expenses e INNER JOIN expenses_category cat INNER JOIN payment_methods pay 				  ON e.category_id = cat.id AND e.user_id = cat.user_id AND e.user_id = pay.user_id 					  AND e.payment_id = pay.id WHERE e.user_id = '$user_id' ORDER BY amount DESC";
+									$query = "SELECT * FROM expenses e INNER JOIN expenses_category cat INNER JOIN payment_methods pay 				  ON e.category_id = cat.id AND e.user_id = cat.user_id AND e.user_id = pay.user_id 					  AND e.payment_id = pay.id WHERE e.user_id = '$user_id' ORDER BY amount DESC";
 													
 									if(!$result = $manager->dbo->query($query)){
 										//echo 'Wystąpił błąd: nieprawidłowe zapytanie...';

@@ -34,15 +34,15 @@ try{
 					$manager->setMessage('Najpierw proszę się wylogować.');
 			          header('Location:index.php?action=showMain');
 			          return;
-        		case ACTION_FAILED :
-        		case FORM_DATA_MISSING :
-          			$manager->setMessage('Błędna nazwa lub hasło użytkownika');
-          			break;
-        		default:
-          			$manager->setMessage('Błąd serwera. Zalogowanie nie jest obecnie możliwe.');
-      		}
-      		header('Location:index.php?action=showLoginForm');
-      		break;
+        case ACTION_FAILED :
+        case FORM_DATA_MISSING :
+          	$manager->setMessage('Błędna nazwa lub hasło użytkownika');
+          	break;
+        default:
+        $manager->setMessage('Błąd serwera. Zalogowanie nie jest obecnie możliwe.');
+      	}
+      	header('Location:index.php?action=showLoginForm');
+      	break;
     	case 'logout': 
       		$manager->logout();
       		header('Location:index.php?action=showMain');

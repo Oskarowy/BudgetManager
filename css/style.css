@@ -4,13 +4,15 @@ body{
 	background: #cccccc;
 	margin-top: 100px;
 	margin-bottom: 100px;
-	/*-webkit-background-size: cover;
+	background-image: url('../img/back.jpg');
+	background-repeat: no-repeat;
+	background-position: top center;
+	background-size: 100% auto;
+	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	background-size: cover;
 	-o-background-size: cover;
 	text-align: center;
-	background-image: url('../img/pluses.png');
-	*/
 }
 
 .message{
@@ -26,7 +28,6 @@ body{
 .panel{
 	min-height: 460px;
 }
-
 
 #logo
 {
@@ -100,19 +101,8 @@ hr{
     background-color: #e5c298;
 }
 .dropdown-navbar-item {
-    color: ffe6c8 !important;
+    color: #ffe6c8 !important;
 	background-color: #9a6c35 !important;
-}
-
-.menubutton{
-	margin: 5px;
-	border: 1px solid #895b24;
-}
-
-.coffeetron{
-	background: transparent;
-	color: #ffe6c8;
-	text-align: center;
 }
 
 #steps{
@@ -143,7 +133,6 @@ a:active{
 	letter-spacing: 2px;
 	cursor: pointer;
 	text-decoration: none;
-	button: active;
 }
 
 .table-heading{

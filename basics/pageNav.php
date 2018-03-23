@@ -10,10 +10,10 @@
 								href="index.php?action=showMain" >
 									<span 	class="visible-xs visible-sm" 
 											style="font-size: 20px; margin-left: -10px;">
-										Budget</br>manager
+										Budget<br />manager
 									</span>
 									<span 	class="hidden-xs hidden-sm" >
-										Budget<br/> manager
+										Budget<br /> manager
 									</span>
 							</a>
 						</div>

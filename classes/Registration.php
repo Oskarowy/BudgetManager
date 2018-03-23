@@ -64,7 +64,7 @@ class Registration
       return FORM_DATA_MISSING;
     }
     
-    $query = "SELECT COUNT(*) FROM Users WHERE Email='"
+    $query = "SELECT COUNT(*) FROM users WHERE `email`='"
            . $fieldsFromForm['email'] . "'";
     if($this->dbo->getQuerySingleResult($query) > 0){
       unset($fieldsFromForm['password']);
@@ -87,7 +87,7 @@ class Registration
     $fieldsNames = '`'.implode('`,`', array_keys($this->fields)).'`';
     $fieldsVals = '\''.implode('\',\'', $fieldsFromForm).'\'';
     
-    $query = "INSERT INTO Users ($fieldsNames) VALUES ($fieldsVals)";
+    $query = "INSERT INTO users ($fieldsNames) VALUES ($fieldsVals)";
 
     if($this->dbo->query($query)){
       return ACTION_OK;
