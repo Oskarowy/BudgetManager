@@ -208,7 +208,8 @@ try{
             break;
           case CATEGORY_NAME_ALREADY_EXISTS:
             $manager->setMessage('Kategoria o takiej nazwie już istnieje. Wybierz inną nazwę!');
-            break;
+            header('Location:index.php?action=showMenu');
+            return;
           case ACTION_FAILED:
             $manager->setMessage('Obecnie edycja kategorii nie jest możliwa.');
             break;
@@ -228,10 +229,12 @@ try{
             return;
           case CATEGORY_HAS_RECORDS:
             $manager->setMessage('Kategoria została wyłączona, ale nie usunięta z powodu przypisanych do niej rekordów.');
-            break;
+            header('Location:index.php?action=showMenu');
+            return;
           case LAST_CATEGORY_CANNOT_BE_DELETED:
             $manager->setMessage('Jest to ostatnia kategoria tego typu, nie może zostać wyłączona ani usunięta...');
-            break;
+            header('Location:index.php?action=showMenu');
+            return;
           case ACTION_FAILED:
             $manager->setMessage('Obecnie usunięcie kategorii nie jest możliwe.');
             break;

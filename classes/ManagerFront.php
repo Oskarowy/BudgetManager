@@ -189,8 +189,7 @@ class ManagerFront extends Manager
 
     if($result->num_rows <> 0){
 
-      if($this->isSuchNameExist($category_name, $category_type)){
-        $_SESSION['category_exists'] = true;
+      if($this->isSuchNameExist($category_name, $category_type) == TRUE){
           return CATEGORY_NAME_ALREADY_EXISTS;
       } else {
         $this->setCharsetAndNames(); 
@@ -538,7 +537,7 @@ class ManagerFront extends Manager
   {
     $user_id =  $_SESSION['user_id'];
     $category_id = $_SESSION['category_id'];
-    return $this->deleteCategoryFromTable($category_type, $category_id, $user_id);
+    return $this->deleteCategoryFromTable($category_type, $category_id, $user_id);;
   }
 
   function deleteCategoryFromTable($category_type, $category_id, $user_id)
@@ -558,7 +557,6 @@ class ManagerFront extends Manager
 
       switch($checkPoint){
         case CATEGORY_HAS_RECORDS:
-          $_SESSION['category_has_records']=true;
           return CATEGORY_HAS_RECORDS;
           break;
         case LAST_CATEGORY_CANNOT_BE_DELETED:
@@ -601,11 +599,12 @@ class ManagerFront extends Manager
       return SERVER_ERROR;
     }
 
-    if($result->num_rows >= 1){
-      if($this->checkIfLastActiveCategory($categoriesTableName) == LAST_CATEGORY_CANNOT_BE_DELETED){
-        $_SESSION['last_active_category'] = LAST_CATEGORY_CANNOT_BE_DELETED;
+    if($this->checkIfLastActiveCategory($categoriesTableName) == LAST_CATEGORY_CANNOT_BE_DELETED){
         return LAST_CATEGORY_CANNOT_BE_DELETED;
-      }
+    }
+
+    if($result->num_rows >= 1){
+      
       $query = "UPDATE ".$categoriesTableName." SET `active` = 0 WHERE `user_id` = '$user_id' AND `id` = '$category_id'";  
 
       if(!$result = $this->dbo->query($query)){
@@ -614,7 +613,7 @@ class ManagerFront extends Manager
       }
       return CATEGORY_HAS_RECORDS;
 
-    } return ACTION_OK;
+    } else return ACTION_OK;
   }
 
   function checkIfLastActiveCategory($categoriesTableName)
@@ -652,8 +651,7 @@ class ManagerFront extends Manager
     }
 
     if($result->num_rows == 1){
-      if($this->isSuchNameExist($category_name, $category_type)){
-        $_SESSION['category_exists'] = true;
+      if($this->isSuchNameExist($category_name, $category_type) == TRUE){
           return CATEGORY_NAME_ALREADY_EXISTS;
       } else {
         $this->setCharsetAndNames(); 
